@@ -33,10 +33,11 @@ public abstract class OLSTrendLine implements TrendLine {
             }
         }
         OLSMultipleLinearRegression ols = new OLSMultipleLinearRegression();
-        rSquared = ols.calculateRSquared();
         ols.setNoIntercept(true); // let the implementation include a constant in xVector if desired
         ols.newSampleData(y, xData); // provide the data to the model
-        coef = MatrixUtils.createColumnRealMatrix(ols.estimateRegressionParameters()); // get our coefs
+        double[] params = ols.estimateRegressionParameters();
+        rSquared = ols.calculateRSquared();
+        coef = MatrixUtils.createColumnRealMatrix(params); // get our coefs
     }
 
     @Override
@@ -61,8 +62,14 @@ public abstract class OLSTrendLine implements TrendLine {
         for (TrendLine trendLine : trendLines) {
             trendLine.setValues(y, x);
         }
-        trendLines.sort((a, b) -> (int) (a.getRSquared() - b.getRSquared()));
-        return trendLines.get(0);
+        ArrayList<TrendLine> viable = new ArrayList<>();
+        for (TrendLine trendLine : trendLines) {
+            if(!Double.isNaN(trendLine.getRSquared())){
+                viable.add(trendLine);
+            }
+        }
+        viable.sort((a, b) -> (int) (b.getRSquared() - a.getRSquared()));
+        return viable.get(0);
     }
 }
 

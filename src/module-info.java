@@ -1,4 +1,4 @@
-module web_view_test{
+module hjem_is{
     requires java.desktop;
     requires javafx.swing;
     requires javafx.web;
