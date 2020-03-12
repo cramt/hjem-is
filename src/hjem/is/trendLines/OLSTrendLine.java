@@ -1,5 +1,6 @@
 package hjem.is.trendLines;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -48,6 +49,20 @@ public abstract class OLSTrendLine implements TrendLine {
     @Override
     public double getRSquared() {
         return rSquared;
+    }
+
+    public static TrendLine assumeTrend(double[] y, double[] x) {
+        ArrayList<TrendLine> trendLines = new ArrayList<>();
+        trendLines.add(new ExpTrendLine());
+        trendLines.add(new LogTrendLine());
+        trendLines.add(new PowerTrendLine());
+        trendLines.add(new PolyTrendLine(1));
+        trendLines.add(new PolyTrendLine(2));
+        for (TrendLine trendLine : trendLines) {
+            trendLine.setValues(y, x);
+        }
+        trendLines.sort((a, b) -> (int) (a.getRSquared() - b.getRSquared()));
+        return trendLines.get(0);
     }
 }
 
