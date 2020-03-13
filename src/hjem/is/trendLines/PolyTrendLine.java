@@ -8,13 +8,8 @@ public class PolyTrendLine extends OLSTrendLine {
         this.degree = degree;
     }
 
-    protected double[] xVector(double x) { // {1, x, x*x, x*x*x, ...}
+    protected double[] xVector(double x) {
         return new double[]{1, Math.pow(x, degree)};
-    }
-
-    @Override
-    protected boolean logY() {
-        return false;
     }
 }
 

@@ -5,10 +5,4 @@ public class LogTrendLine extends OLSTrendLine {
     protected double[] xVector(double x) {
         return new double[]{1, Math.log(x)};
     }
-
-
-    @Override
-    protected boolean logY() {
-        return false;
-    }
 }
