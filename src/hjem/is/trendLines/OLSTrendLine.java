@@ -64,11 +64,11 @@ public abstract class OLSTrendLine implements TrendLine {
         }
         ArrayList<TrendLine> viable = new ArrayList<>();
         for (TrendLine trendLine : trendLines) {
-            if(!Double.isNaN(trendLine.getRSquared())){
+            if (!Double.isNaN(trendLine.getRSquared())) {
                 viable.add(trendLine);
             }
         }
-        viable.sort((a, b) -> (int) (b.getRSquared() - a.getRSquared()));
+        viable.sort((a, b) -> (int) ((b.getRSquared() - a.getRSquared()) * 10000));
         return viable.get(0);
     }
 }
