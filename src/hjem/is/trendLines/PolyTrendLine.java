@@ -9,13 +9,7 @@ public class PolyTrendLine extends OLSTrendLine {
     }
 
     protected double[] xVector(double x) { // {1, x, x*x, x*x*x, ...}
-        double[] poly = new double[degree + 1];
-        double xi = 1;
-        for (int i = 0; i <= degree; i++) {
-            poly[i] = xi;
-            xi *= x;
-        }
-        return poly;
+        return new double[]{1, Math.pow(x, degree)};
     }
 
     @Override
