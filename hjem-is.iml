@@ -28,5 +28,6 @@
     </orderEntry>
     <orderEntry type="library" name="mockito-all-1.9.5" level="project" />
     <orderEntry type="library" name="junit-jupiter-api-5.1.0" level="project" />
+    <orderEntry type="library" name="poi-4.1" level="project" />
   </component>
 </module>
