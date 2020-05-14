@@ -5,4 +5,5 @@ module hjem_is{
     requires commons.math3;
     requires poi;
     requires poi.ooxml;
+    requires java.sql;
 }
