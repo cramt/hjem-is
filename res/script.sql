@@ -14,7 +14,7 @@ CREATE TABLE storage_meta_data
     foreign key (storage_plan_id) references storage_plans (id) on delete cascade
 )
 
-CREATE TABLE seasonal_plans
+CREATE TABLE periodic_plans
 (
     id              INT identity (1,1),
     start_period    INT NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE products_supplier
     foreign key (supplier_id) references suppliers (id) on delete cascade
 )
 
-CREATE TABLE seasonal_plans_products_map
+CREATE TABLE periodic_plans_products_map
 (
     product_id       INT NOT NULL,
     amount           INT NOT NULL,
