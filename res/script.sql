@@ -17,9 +17,9 @@ CREATE TABLE storage_meta_data
 CREATE TABLE seasonal_plans
 (
     id              INT identity (1,1),
-    start_period    DATE NOT NULL,
-    end_period      DATE NOT NULL,
-    storage_plan_id INT  NOT NULL,
+    start_period    INT NOT NULL,
+    end_period      INT NOT NULL,
+    storage_plan_id INT NOT NULL,
     primary key (id),
     foreign key (storage_plan_id) references storage_plans (id) on delete cascade
 )
@@ -36,10 +36,10 @@ CREATE TABLE suppliers
 CREATE TABLE storage_orders
 (
     id               INT identity (1,1),
-    sent_data        DATE        NOT NULL,
-    tracking_id      VARCHAR(35) NOT NULL,
-    seasonal_plan_id INT         NOT NULL,
-    supplier_id      INT         NOT NULL,
+    sent_data        DATE,
+    tracking_id      VARCHAR(35),
+    seasonal_plan_id INT NOT NULL,
+    supplier_id      INT NOT NULL,
     primary key (id),
     foreign key (seasonal_plan_id) references seasonal_plans (id) on delete cascade,
     foreign key (supplier_id) references suppliers (id) on delete cascade
