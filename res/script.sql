@@ -1,14 +1,14 @@
 CREATE TABLE storage_plans
 (
     id   INT identity (1,1),
-    name VARCHAR(MAX) not null,
+    name VARCHAR(MAX) NOT NULL,
     primary key (id)
 )
 
 CREATE TABLE storage_meta_data
 (
     id                     INT identity (1,1),
-    percent_inventory_cost FLOAT not null,
+    percent_inventory_cost FLOAT NOT NULL,
     storage_plan_id        INT   NOT NULL,
     primary key (id),
     foreign key (storage_plan_id) references storage_plans (id) on delete cascade

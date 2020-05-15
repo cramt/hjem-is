@@ -23,6 +23,9 @@ public class Period {
     }
 
     public int getEnd() {
+        if (end < start) {
+            return end + amountOfDaysInYear();
+        }
         return end;
     }
 
@@ -37,7 +40,32 @@ public class Period {
         return now > s && now < e;
     }
 
+    public int size() {
+        return getStart() - getEnd();
+    }
+
     private long getUnixTimestamp(LocalDate localDate) {
         return localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    private int amountOfDaysInYear() {
+        return isLeapYear() ? 366 : 365;
+    }
+
+    private boolean isLeapYear() {
+        boolean leap = false;
+        int year = new Date().getYear();
+
+        if (year % 4 == 0) {
+            if (year % 100 == 0) {
+                if (year % 400 == 0)
+                    leap = true;
+                else
+                    leap = false;
+            } else
+                leap = true;
+        } else
+            leap = false;
+        return leap;
     }
 }
