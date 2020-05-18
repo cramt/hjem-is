@@ -21,6 +21,10 @@ public class ModelFinder {
         this.funcs = Combination.repeated(Arrays.asList(functions), observations[0].getFeatures().size() - 1);
     }
 
+    public ModelFinder(Fittable fittable, Observation[] observations, String dependant) {
+        this(fittable, observations, dependant, new RegressionalFunction[]{x -> Math.pow(x, 3), x -> Math.pow(Math.E, x), x -> x, Math::log});
+    }
+
     public Model run() {
         ArrayList<Model> models = new ArrayList<>();
         for (List<RegressionalFunction> funcs : funcs) {
@@ -36,7 +40,7 @@ public class ModelFinder {
         }
         ArrayList<Model> notNaN = new ArrayList<>();
         for (Model model : models) {
-            if(!Double.isNaN(model.rSquared)){
+            if (!Double.isNaN(model.rSquared)) {
                 notNaN.add(model);
             }
         }

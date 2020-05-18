@@ -1,11 +1,16 @@
 package hjem.is;
 
+import hjem.is.controller.regression.ModelFinder;
+import hjem.is.controller.regression.NormalEquationFit;
+import hjem.is.controller.regression.Observation;
+import hjem.is.controller.regression.RegressionalFunction;
 import hjem.is.utilities.Combination;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,17 +22,33 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Main {
     private static void regressionExample() {
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        List<List<Integer>> result = Combination.repeated(list, 5);
-        for (List<Integer> integers : result) {
-            System.out.println();
-            for (Integer integer : integers) {
-                System.out.print(integer + ", ");
-            }
-        }
+        List<Observation> observations = new ArrayList<>();
+        Observation o = new Observation();
+        o.putFeature("heat", 6.4);
+        o.putFeature("price", 10);
+        o.putFeature("sold", 100);
+        observations.add(o);
+        o = new Observation();
+        o.putFeature("heat", 6);
+        o.putFeature("price", 10);
+        o.putFeature("sold", 90);
+        observations.add(o);
+        o = new Observation();
+        o.putFeature("heat", 5.5);
+        o.putFeature("price", 10);
+        o.putFeature("sold", 86);
+        observations.add(o);
+        o = new Observation();
+        o.putFeature("heat", 5);
+        o.putFeature("price", 10);
+        o.putFeature("sold", 80);
+        observations.add(o);
+        o = new Observation();
+        o.putFeature("heat", 4);
+        o.putFeature("price", 10);
+        o.putFeature("sold", 70);
+        observations.add(o);
+        ModelFinder finder = new ModelFinder(new NormalEquationFit(), (Observation[]) observations.toArray(), "sold");
     }
 
     private static void excelExample() {
