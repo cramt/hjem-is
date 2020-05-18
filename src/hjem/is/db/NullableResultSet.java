@@ -4,8 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-public class Util {
-    public static Float getFloat(ResultSet set, String str) throws SQLException {
+public class NullableResultSet {
+    private ResultSet set;
+
+    public NullableResultSet(ResultSet set) {
+        this.set = set;
+    }
+
+    public ResultSet getSet() {
+        return set;
+    }
+
+    public Float getFloat(String str) throws SQLException {
         Float res = set.getFloat(str);
         if (set.wasNull()) {
             res = null;
@@ -13,7 +23,7 @@ public class Util {
         return res;
     }
 
-    public static Float getFloat(ResultSet set, int i) throws SQLException {
+    public Float getFloat(int i) throws SQLException {
         Float res = set.getFloat(i);
         if (set.wasNull()) {
             res = null;
@@ -21,7 +31,7 @@ public class Util {
         return res;
     }
 
-    public static Integer getInt(ResultSet set, String str) throws SQLException {
+    public Integer getInt(String str) throws SQLException {
         Integer res = set.getInt(str);
         if (set.wasNull()) {
             res = null;
@@ -29,7 +39,7 @@ public class Util {
         return res;
     }
 
-    public static Integer getInt(ResultSet set, int i) throws SQLException {
+    public Integer getInt(int i) throws SQLException {
         Integer res = set.getInt(i);
         if (set.wasNull()) {
             res = null;
@@ -37,7 +47,7 @@ public class Util {
         return res;
     }
 
-    public static Byte getByte(ResultSet set, String str) throws SQLException {
+    public Byte getByte(String str) throws SQLException {
         Byte res = set.getByte(str);
         if (set.wasNull()) {
             res = null;
@@ -45,7 +55,7 @@ public class Util {
         return res;
     }
 
-    public static Byte getByte(ResultSet set, int i) throws SQLException {
+    public Byte getByte(int i) throws SQLException {
         Byte res = set.getByte(i);
         if (set.wasNull()) {
             res = null;
@@ -53,7 +63,7 @@ public class Util {
         return res;
     }
 
-    public static LocalDateTime getDateTime(ResultSet set, int i) throws SQLException {
+    public LocalDateTime getDateTime(int i) throws SQLException {
         java.sql.Timestamp res = set.getTimestamp(i);
         if (res == null) {
             return null;
@@ -61,11 +71,12 @@ public class Util {
         return res.toLocalDateTime();
     }
 
-    public static LocalDateTime getDateTime(ResultSet set, String str) throws SQLException {
+    public LocalDateTime getDateTime(String str) throws SQLException {
         java.sql.Timestamp res = set.getTimestamp(str);
         if (res == null) {
             return null;
         }
         return res.toLocalDateTime();
     }
+
 }
