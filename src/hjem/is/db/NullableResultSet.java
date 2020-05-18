@@ -1,5 +1,7 @@
 package hjem.is.db;
 
+import org.apache.commons.math3.analysis.function.Sqrt;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -13,6 +15,10 @@ public class NullableResultSet {
 
     public ResultSet getSet() {
         return set;
+    }
+
+    public boolean next() throws SQLException {
+        return set.next();
     }
 
     public Float getFloat(String str) throws SQLException {
@@ -61,6 +67,14 @@ public class NullableResultSet {
             res = null;
         }
         return res;
+    }
+
+    public String getString(int i) throws SQLException{
+        return set.getString(i);
+    }
+
+    public String getString(String str) throws SQLException{
+        return set.getString(str);
     }
 
     public LocalDateTime getDateTime(int i) throws SQLException {

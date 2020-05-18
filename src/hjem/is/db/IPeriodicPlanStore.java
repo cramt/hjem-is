@@ -8,5 +8,5 @@ import java.util.List;
 public interface IPeriodicPlanStore {
     PeriodicPlan getById(int id) throws DataAccessException;
     List<PeriodicPlan> getByStoragePlan(StoragePlan storagePlan) throws DataAccessException;
-    void add(PeriodicPlan periodicPlan) throws DataAccessException;
+    void add(PeriodicPlan periodicPlan, StoragePlan storagePlan) throws DataAccessException;
 }
