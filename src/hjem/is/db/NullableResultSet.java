@@ -92,5 +92,4 @@ public class NullableResultSet {
         }
         return res.toLocalDateTime();
     }
-
 }

@@ -7,8 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -53,6 +55,6 @@ public class Main {
 
     public static void main(String[] args) {
         //excelExample();
-        
+        System.out.println(Arrays.stream(new String[3]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
     }
 }

@@ -7,28 +7,46 @@ import hjem.is.model.StoragePlan;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
 
     @Override
     public PeriodicPlan getById(int id) throws DataAccessException {
         try {
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT start_period, end_period FROM periodic_plans WHERE id = ?");
-            stmt.setInt(1, id);
-            NullableResultSet result = new NullableResultSet(stmt.executeQuery());
-            if (result.next()) {
-                return new PeriodicPlan(null, new Period(result.getInt("start_period"), result.getInt("end_period")), null, id);
-            } else {
+            FutureTask<Map<Product, Integer>> mapFuture = new FutureTask<>(() -> {
+                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE periodic_plan_id = ?");
+                stmt.setInt(1, id);
+                NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+                Map<Product, Integer> map = new HashMap<>();
+                while (result.next()) {
+                    map.put(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("product_id")), result.getInt("amount"));
+                }
+                return map;
+            });
+            FutureTask<PeriodicPlan> planFuture = new FutureTask<>(() -> {
+                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT start_period, end_period FROM periodic_plans WHERE id = ?");
+                stmt.setInt(1, id);
+                NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+                if (result.next()) {
+                    return new PeriodicPlan(null, new Period(result.getInt("start_period"), result.getInt("end_period")), null, id);
+                } else {
+                    return null;
+                }
+            });
+            PeriodicPlan plan = planFuture.get();
+            if (plan == null) {
                 return null;
             }
-        } catch (SQLException e) {
+            plan.setProductMap(mapFuture.get());
+            return plan;
+        } catch (ExecutionException | InterruptedException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
@@ -39,12 +57,23 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT start_period, end_period, id FROM periodic_plans WHERE storage_plan_id = ?");
             stmt.setInt(1, storagePlan.getId());
             NullableResultSet result = new NullableResultSet(stmt.executeQuery());
-            List<PeriodicPlan> plans = new ArrayList<>();
+            Map<Integer, PeriodicPlan> plans = new HashMap<>();
             while (result.next()) {
-                plans.add(new PeriodicPlan(null, new Period(result.getInt("start_period"), result.getInt("end_period")), null, result.getInt("id")));
+                int id = result.getInt("id");
+                plans.put(id, new PeriodicPlan(new HashMap<>(), new Period(result.getInt("start_period"), result.getInt("end_period")), null, id));
             }
-            storagePlan.setPeriodicPlans(plans);
-            return plans;
+            stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE " + Arrays.stream(new String[plans.size()]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
+            int i = 1;
+            for (Integer key : plans.keySet()) {
+                stmt.setInt(i++, key);
+            }
+            result = new NullableResultSet(stmt.executeQuery());
+            while (result.next()) {
+                plans.get(result.getInt("periodic_plan_id")).getProductMap().put(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("product_id")), result.getInt("amount"));
+            }
+            List<PeriodicPlan> plansList = Arrays.asList((PeriodicPlan[]) plans.values().toArray());
+            storagePlan.setPeriodicPlans(plansList);
+            return plansList;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
