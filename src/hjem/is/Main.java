@@ -1,9 +1,6 @@
 package hjem.is;
 
-import hjem.is.controller.regression.ModelFinder;
-import hjem.is.controller.regression.NormalEquationFit;
-import hjem.is.controller.regression.Observation;
-import hjem.is.controller.regression.RegressionalFunction;
+import hjem.is.controller.regression.*;
 import hjem.is.utilities.Combination;
 
 import java.io.FileNotFoundException;
@@ -49,6 +46,9 @@ public class Main {
         o.putFeature("sold", 70);
         observations.add(o);
         ModelFinder finder = new ModelFinder(new NormalEquationFit(), (Observation[]) observations.toArray(), "sold");
+        Model model = finder.run();
+        o = new Observation();
+
     }
 
     private static void excelExample() {
