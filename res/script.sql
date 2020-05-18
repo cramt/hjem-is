@@ -41,7 +41,7 @@ CREATE TABLE storage_orders
     seasonal_plan_id INT NOT NULL,
     supplier_id      INT NOT NULL,
     primary key (id),
-    foreign key (seasonal_plan_id) references seasonal_plans (id) on delete cascade,
+    foreign key (seasonal_plan_id) references periodic_plans (id) on delete cascade,
     foreign key (supplier_id) references suppliers (id) on delete cascade
 )
 
@@ -58,9 +58,10 @@ CREATE TABLE product_lines
     id               INT identity (1,1),
     amount           INT NOT NULL,
     product_id       INT NOT NULL,
-    storage_order_id INT NOT NULL,
+    storage_order_id INT,
     primary key (id),
-    foreign key (product_id) references products (id) on delete cascade
+    foreign key (product_id) references products (id) on delete cascade,
+    foreign key (storage_order_id) references storage_orders (id) on delete cascade
 )
 
 CREATE TABLE products_supplier
@@ -75,7 +76,7 @@ CREATE TABLE periodic_plans_products_map
 (
     product_id       INT NOT NULL,
     amount           INT NOT NULL,
-    seasonal_plan_id INT NOT NULL,
+    periodic_plan_id INT NOT NULL,
     foreign key (product_id) references products (id) on delete cascade,
-    foreign key (seasonal_plan_id) references seasonal_plans (id) on delete cascade
+    foreign key (periodic_plan_id) references periodic_plans (id) on delete cascade
 )
