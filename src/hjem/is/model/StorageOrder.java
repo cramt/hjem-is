@@ -3,7 +3,6 @@ package hjem.is.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
 public class StorageOrder {
     private LocalDateTime sentDate;
     private String trackingId;
