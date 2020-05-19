@@ -10,4 +10,5 @@ public interface IStoragePlanStore {
     void add(StoragePlan storagePlan) throws DataAccessException;
     List<StoragePlan> getALl() throws DataAccessException;
     StoragePlan getActive() throws DataAccessException;
+    void update(StoragePlan storagePlan) throws DataAccessException;
 }

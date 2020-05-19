@@ -4,7 +4,7 @@ import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StorageMetaData;
 import hjem.is.model.StoragePlan;
 
-import javax.swing.plaf.basic.BasicTreeUI;
+import java.lang.ref.SoftReference;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -83,6 +83,22 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             } else {
                 return null;
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void update(StoragePlan storagePlan) throws DataAccessException {
+        if (storagePlan.getId() == null) {
+            throw new IllegalArgumentException("this object isnt in the database and cant be updated");
+        }
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET name = ?, active = ? WHERE id = ?");
+            stmt.setString(1, storagePlan.getName());
+            stmt.setInt(2, storagePlan.isActive() ? 1 : 0);
+            stmt.setInt(3, storagePlan.getId());
+            stmt.execute();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
