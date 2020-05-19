@@ -8,10 +8,12 @@ import java.util.Date;
 public class Period {
     private int start;
     private int end;
+    private TimeProvider provider;
 
     public Period(int start, int end) {
         this.start = start;
         this.end = end;
+        provider = new StandardTimeProvider();
     }
 
     public int getStart() {
@@ -34,7 +36,7 @@ public class Period {
     }
 
     public boolean isNow() {
-        long now = getUnixTimestamp(LocalDate.now());
+        long now = getUnixTimestamp(provider.getTime());
         long s = getUnixTimestamp(LocalDate.ofYearDay(new Date().getYear(), start));
         long e = getUnixTimestamp(LocalDate.ofYearDay(new Date().getYear(), end));
         return now > s && now < e;
@@ -67,5 +69,13 @@ public class Period {
         } else
             leap = false;
         return leap;
+    }
+
+    public TimeProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(TimeProvider provider) {
+        this.provider = provider;
     }
 }
