@@ -52,7 +52,7 @@ public class ProductSqlStore implements IProductStore {
     @Override
     public List<Product> getByName(String name) throws DataAccessException {
         try {
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT cost, product_id, supplier_id, suppliers.name as s_name, suppliers.delivery_price, suppliers.delivery_speed FROM products INNER JOIN products_supplier ON products.id = products_supplier.product_id INNER JOIN suppliers ON products_supplier.supplier_id = suppliers.id WHERE name = ?");
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT cost, product_id, supplier_id, suppliers.name as s_name, suppliers.delivery_price, suppliers.delivery_speed FROM products INNER JOIN products_supplier ON products.id = products_supplier.product_id INNER JOIN suppliers ON products_supplier.supplier_id = suppliers.id WHERE products.name = ?");
             stmt.setString(1, name);
             NullableResultSet result = new NullableResultSet(stmt.executeQuery());
             List<Product> products = new ArrayList<>();
