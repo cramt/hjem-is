@@ -18,7 +18,7 @@ public class StorageOrder {
         this.orders = orders;
     }
 
-    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<ProductLine> orders, Integer id) {
+    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<ProductLine> orders, int id) {
         this(sentDate, trackingId, supplier, orders);
         this.id = id;
     }

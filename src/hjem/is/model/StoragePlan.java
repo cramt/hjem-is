@@ -16,7 +16,7 @@ public class StoragePlan {
         this.active = active;
     }
 
-    public StoragePlan(String name, boolean active, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans, Integer id) {
+    public StoragePlan(String name, boolean active, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans, int id) {
         this(name, active, storageMetaData, periodicPlans);
         this.id = id;
     }
