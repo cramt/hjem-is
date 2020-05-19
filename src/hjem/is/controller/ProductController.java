@@ -1,4 +1,4 @@
-package hjem.is.control;
+package hjem.is.controller;
 
 import hjem.is.model.Product;
 import hjem.is.model.Supplier;

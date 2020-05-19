@@ -1,6 +1,7 @@
-package hjem.is.control;
+package hjem.is.controller;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StorageMetaData;
+import hjem.is.model.StorageOrder;
 import hjem.is.model.StoragePlan;
 
 import java.util.List;
@@ -10,6 +11,14 @@ public class StoragePlanController {
 
     public StoragePlanController(StoragePlan storagePlan) {
         this.storagePlan = storagePlan;
+    }
+
+    public StoragePlan generateNew(String name) {
+        //Make the method that generates the Plan
+        return storagePlan;
+    }
+    public void createStorageOrder(PeriodicPlan periodicPlan) {
+
     }
 
     public void setSPName(String name) {
