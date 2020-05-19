@@ -35,10 +35,8 @@ public class Period {
     }
 
     public boolean isNow() {
-        long now = getUnixTimestamp(provider.getTime());
-        long s = getUnixTimestamp(LocalDate.ofYearDay(new Date().getYear(), start));
-        long e = getUnixTimestamp(LocalDate.ofYearDay(new Date().getYear(), end));
-        return now > s && now < e;
+        int now = provider.getTime().getDayOfYear();
+        return now > getStart() && now < getEnd();
     }
 
     public int size() {
