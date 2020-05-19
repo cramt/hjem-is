@@ -1,6 +1,6 @@
 package hjem.is.db;
 
-import hjem.is.model.Period;
+import hjem.is.model.time.Period;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.Product;
 import hjem.is.model.StoragePlan;

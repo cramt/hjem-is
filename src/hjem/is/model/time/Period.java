@@ -1,7 +1,6 @@
-package hjem.is.model;
+package hjem.is.model.time;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 

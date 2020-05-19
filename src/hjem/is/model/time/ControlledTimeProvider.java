@@ -1,4 +1,4 @@
-package hjem.is.model;
+package hjem.is.model.time;
 
 import java.time.LocalDate;
 
