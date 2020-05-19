@@ -1,4 +1,4 @@
-package hjem.is.control;
+package hjem.is.controller;
 
 import hjem.is.model.ProductLine;
 import hjem.is.model.StorageOrder;
