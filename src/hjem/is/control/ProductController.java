@@ -10,8 +10,8 @@ public ProductController(Product product) {
     this.product = product;
     }
 
-public void addProductAmount(Product product) {
-    this.product = product;
+public void addProduct(int amount) {
+
     }
 }
 
