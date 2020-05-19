@@ -1,4 +1,4 @@
-package hjem.is.control;
+package hjem.is.controller;
 
 import hjem.is.model.Product;
 import hjem.is.model.Supplier;
@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     public void setName(String name) {
-        product.setName();
+        product.setName(name);
     }
 
     public Supplier getSupplier() {
