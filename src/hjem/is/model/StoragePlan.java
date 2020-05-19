@@ -6,16 +6,18 @@ public class StoragePlan {
     private String name;
     private StorageMetaData storageMetaData;
     private List<PeriodicPlan> periodicPlans;
+    private boolean active;
     private Integer id = null;
 
-    public StoragePlan(String name, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans) {
+    public StoragePlan(String name, boolean active, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans) {
         this.name = name;
         this.storageMetaData = storageMetaData;
         this.periodicPlans = periodicPlans;
+        this.active = active;
     }
 
-    public StoragePlan(String name, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans, Integer id) {
-        this(name, storageMetaData, periodicPlans);
+    public StoragePlan(String name, boolean active, StorageMetaData storageMetaData, List<PeriodicPlan> periodicPlans, Integer id) {
+        this(name, active, storageMetaData, periodicPlans);
         this.id = id;
     }
 
@@ -45,5 +47,13 @@ public class StoragePlan {
 
     public void setPeriodicPlans(List<PeriodicPlan> periodicPlans) {
         this.periodicPlans = periodicPlans;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

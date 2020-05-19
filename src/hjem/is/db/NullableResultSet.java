@@ -69,11 +69,11 @@ public class NullableResultSet {
         return res;
     }
 
-    public String getString(int i) throws SQLException{
+    public String getString(int i) throws SQLException {
         return set.getString(i);
     }
 
-    public String getString(String str) throws SQLException{
+    public String getString(String str) throws SQLException {
         return set.getString(str);
     }
 
@@ -83,6 +83,22 @@ public class NullableResultSet {
             return null;
         }
         return res.toLocalDateTime();
+    }
+
+    public Boolean getBool(String str) throws SQLException {
+        Byte b = getByte(str);
+        if (b == null) {
+            return null;
+        }
+        return b == 1;
+    }
+
+    public Boolean getBool(int i) throws SQLException {
+        Byte b = getByte(i);
+        if (b == null) {
+            return null;
+        }
+        return b == 1;
     }
 
     public LocalDateTime getDateTime(String str) throws SQLException {

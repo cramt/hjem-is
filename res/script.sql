@@ -2,6 +2,7 @@ CREATE TABLE storage_plans
 (
     id   INT identity (1,1),
     name VARCHAR(MAX) NOT NULL,
+    active BIT NOT NULL,
     primary key (id)
 )
 

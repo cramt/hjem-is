@@ -1,5 +1,9 @@
 package hjem.is.db;
 
-public class StorageMetaDataSqlStore implements IStorageMetaDataStore{
+import hjem.is.model.StorageMetaData;
 
+public class StorageMetaDataSqlStore implements IStorageMetaDataStore{
+    public void add(StorageMetaData storageMetaData) throws DataAccessException{
+
+    }
 }
