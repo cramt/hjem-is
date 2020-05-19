@@ -6,4 +6,5 @@ module hjem_is{
     requires poi;
     requires poi.ooxml;
     requires java.sql;
+    requires org.junit.jupiter.api;
 }
