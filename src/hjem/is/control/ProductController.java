@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     public void setName(String name) {
-        product.setName();
+        product.setName(name);
     }
 
     public Supplier getSupplier() {

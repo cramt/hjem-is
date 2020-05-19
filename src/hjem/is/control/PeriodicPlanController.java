@@ -2,8 +2,8 @@ package hjem.is.control;
 
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.Product;
-import hjem.is.model.Period;
 import hjem.is.model.StorageOrder;
+import hjem.is.model.time.Period;
 
 import java.util.List;
 import java.util.Map;
