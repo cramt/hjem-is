@@ -12,7 +12,7 @@ public class Supplier {
         this.name = name;
     }
 
-    public Supplier(int deliverySpeed, int deliveryPrice, String name, Integer id) {
+    public Supplier(int deliverySpeed, int deliveryPrice, String name, int id) {
         this(deliverySpeed, deliveryPrice, name);
         this.id = id;
     }

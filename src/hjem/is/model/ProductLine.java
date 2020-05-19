@@ -10,7 +10,7 @@ public class ProductLine {
         this.amount = amount;
     }
 
-    public ProductLine(Product product, int amount, Integer id) {
+    public ProductLine(Product product, int amount, int id) {
         this(product, amount);
         this.id = id;
     }

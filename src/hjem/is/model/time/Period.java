@@ -36,7 +36,9 @@ public class Period {
 
     public boolean isNow() {
         int now = provider.getTime().getDayOfYear();
-        return now > getStart() && now < getEnd();
+        int s = getStart();
+        int e = getEnd();
+        return (now > s && now < e) || (now > s - amountOfDaysInYear() && now < e - amountOfDaysInYear());
     }
 
     public int size() {

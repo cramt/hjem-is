@@ -12,13 +12,17 @@ public class Product {
         this.supplier = supplier;
     }
 
-    public Product(int cost, String name, Supplier supplier, Integer id) {
+    public Product(int cost, String name, Supplier supplier, int id) {
         this(cost, name, supplier);
         this.id = id;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCost() {
