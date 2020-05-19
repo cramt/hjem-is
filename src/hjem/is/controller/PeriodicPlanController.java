@@ -1,5 +1,6 @@
 package hjem.is.controller;
 
+import hjem.is.db.IProductStore;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.Product;
 import hjem.is.model.ProductLine;
@@ -16,10 +17,6 @@ import java.util.Map;
 
 public class PeriodicPlanController {
     private PeriodicPlan periodicPlan;
-
-    public PeriodicPlanController(PeriodicPlan periodicPlan) {
-        this.periodicPlan = periodicPlan;
-    }
 
     //creates a new order for each new supplier, stacks those together with the same supplier
     public List<StorageOrder> createOrders() {
