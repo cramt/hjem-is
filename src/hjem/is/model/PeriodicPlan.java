@@ -1,5 +1,7 @@
 package hjem.is.model;
 
+import hjem.is.model.time.Period;
+
 import java.util.List;
 import java.util.Map;
 
