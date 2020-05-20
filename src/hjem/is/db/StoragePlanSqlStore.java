@@ -33,7 +33,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             stmt.execute();
             NullableResultSet resultSet = new NullableResultSet(stmt.getGeneratedKeys());
             int id = resultSet.getInt("id");
-            FutureTask<Boolean> metaDataTask = new FutureTask<Boolean>(() -> {
+            FutureTask<Boolean> metaDataTask = new FutureTask<>(() -> {
                 if (storagePlan.getStorageMetaData().getId() == null) {
                     try {
                         PreparedStatement sstmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_meta_data (percent_inventory_cost, storage_plan_id) VALUES (?, ?)");
@@ -46,7 +46,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
                 }
                 return true;
             });
-            FutureTask<Boolean> periodicPlanTask = new FutureTask<Boolean>(() -> {
+            FutureTask<Boolean> periodicPlanTask = new FutureTask<>(() -> {
                 try {
                     PreparedStatement pstmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO periodic_plans (start_period, end_period, storage_plan_id) VALUES " + Arrays.stream(new String[storagePlan.getPeriodicPlans().size()]).map(x -> "(?, ?, ?)").collect(Collectors.joining(",")));
                     int i = 1;
