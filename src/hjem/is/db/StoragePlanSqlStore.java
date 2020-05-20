@@ -71,7 +71,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
     }
 
     @Override
-    public List<StoragePlan> getALl() throws DataAccessException {
+    public List<StoragePlan> getAll() throws DataAccessException {
         return null;
     }
 
