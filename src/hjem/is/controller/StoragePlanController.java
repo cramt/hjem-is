@@ -17,19 +17,7 @@ public class StoragePlanController {
         //Make the method that generates the Plan
         return storagePlan;
     }
-    /*
-    public void createStorageOrder(PeriodicPlan periodicPlan) {
-        try {
-            //get info from pPlan
 
-
-            //String supplier = periodicPlan.getProductMap().;
-            //
-        } catch() {
-
-        }
-    }
-    */
 
     public void setSPName(String name) {
         storagePlan.setName(name);
