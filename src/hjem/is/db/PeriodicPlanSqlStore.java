@@ -81,6 +81,9 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
 
     @Override
     public void add(PeriodicPlan periodicPlan, StoragePlan storagePlan) throws DataAccessException {
+        if (storagePlan.getId() == null) {
+            new StoragePlanSqlStore().add(storagePlan);
+        }
         try {
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO periodic_plans (start_period, end_period, storage_plan_id) VALUES (?, ?, ?)");
             stmt.setInt(1, periodicPlan.getPeriod().getStart());

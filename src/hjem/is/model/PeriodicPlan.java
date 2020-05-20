@@ -26,6 +26,10 @@ public class PeriodicPlan {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Map<Product, Integer> getProductMap() {
         return productMap;
     }
