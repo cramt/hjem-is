@@ -7,7 +7,7 @@ import java.util.Date;
 public class Period {
     private int start;
     private int end;
-    private TimeProvider provider;
+    private ITimeProvider provider;
 
     public Period(int start, int end) {
         this.start = start;
@@ -70,11 +70,11 @@ public class Period {
         return leap;
     }
 
-    public TimeProvider getProvider() {
+    public ITimeProvider getProvider() {
         return provider;
     }
 
-    public void setProvider(TimeProvider provider) {
+    public void setProvider(ITimeProvider provider) {
         this.provider = provider;
     }
 }
