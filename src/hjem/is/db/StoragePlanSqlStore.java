@@ -38,6 +38,8 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             int id = resultSet.getInt("GENERATED_KEYS");
             storagePlan.setId(id);
 
+
+
             if (storagePlan.getStorageMetaData().getId() == null) {
                 try {
                     PreparedStatement sstmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_meta_data (percent_inventory_cost, storage_plan_id) VALUES (?, ?)");
