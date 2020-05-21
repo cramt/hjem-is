@@ -30,6 +30,9 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
     @Override
     public void add(StoragePlan storagePlan) throws DataAccessException {
         try {
+            if (storagePlan.isActive()) {
+                DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
+            }
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_plans (name, active) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, storagePlan.getName());
             stmt.setInt(2, storagePlan.isActive() ? 1 : 0);

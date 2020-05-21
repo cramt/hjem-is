@@ -18,6 +18,10 @@ import java.util.Map;
 public class PeriodicPlanController {
     private PeriodicPlan periodicPlan;
 
+    public PeriodicPlanController(PeriodicPlan plan){
+        this.periodicPlan = plan;
+    }
+
     //creates a new order for each new supplier, stacks those together with the same supplier
     public List<StorageOrder> createOrders() {
         Supplier supplier = null;

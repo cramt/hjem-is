@@ -7,7 +7,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageOrderUI extends JFrame {
+public class StorageOrderUI extends MyFrame {
+
     StoragePlanController controller;
 
     public StorageOrderUI() {
@@ -15,11 +16,13 @@ public class StorageOrderUI extends JFrame {
         List<JComponent> components = new ArrayList<>();
         JButton generateNew = new JButton("Generate New");
         components.add(generateNew);
+        generateNew.addActionListener(e -> {
+            controller.generateNew("new name");
+            new DisplayStorageOrderUI(controller);
+        });
         JLabel label = new JLabel("current storage plans");
         components.add(label);
-        var names = controller.getNames();
-        System.out.println(names);
-        for (String name : names) {
+        for (String name : controller.getNames()) {
             JButton button = new JButton(name);
             components.add(button);
         }
@@ -33,13 +36,6 @@ public class StorageOrderUI extends JFrame {
         setVisible(true);
     }
 
-    private void order(List<JComponent> components) {
-        int i = 0;
-        for (JComponent component : components) {
-            add(component);
-            component.setBounds(0, i, 150, 30);
-            i += 30;
-        }
-    }
+
 }
 

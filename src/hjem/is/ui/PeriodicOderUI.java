@@ -1,9 +1,11 @@
 package hjem.is.ui;
 
+import hjem.is.controller.PeriodicPlanController;
+
 import javax.swing.*;
 
 public class PeriodicOderUI extends JFrame {
-    public PeriodicOderUI(String name, int index) {
+    public PeriodicOderUI(PeriodicPlanController plan) {
 
     }
 }

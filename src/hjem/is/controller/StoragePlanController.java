@@ -7,13 +7,14 @@ import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
 
+import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class StoragePlanController {
-    private StoragePlan storagePlan;
+    private StoragePlan current;
     private IStoragePlanStore store;
 
     public StoragePlanController() {
@@ -22,7 +23,7 @@ public class StoragePlanController {
 
     public StoragePlan generateNew(String name) {
         List<PeriodicPlan> periodicPlans = new ArrayList<>();
-        storagePlan = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
+        current = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
         int i = 356;
         while (i > 1) {
             int s = i;
@@ -30,7 +31,19 @@ public class StoragePlanController {
             int e = i;
             periodicPlans.add(new PeriodicPlan(new HashMap<>(), new Period(s, e), new ArrayList<>()));
         }
-        return storagePlan;
+        return current;
+    }
+
+    public String getName() {
+        return current.getName();
+    }
+
+    public List<Period> getPeriods() {
+        return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
+    }
+
+    public PeriodicPlanController getPeriodicPlan(int index) {
+        return new PeriodicPlanController(current.getPeriodicPlans().get(index));
     }
 
     public List<String> getNames() {
@@ -49,8 +62,7 @@ public class StoragePlanController {
 
                     }
                 }).start();
-            }
-            else {
+            } else {
                 all.remove(active.get(0));
                 all.set(0, active.get(0));
             }
