@@ -1,6 +1,7 @@
 package hjem.is;
 
 import hjem.is.controller.regression.*;
+import hjem.is.ui.StorageOrderUI;
 import hjem.is.utilities.Combination;
 
 import java.io.FileNotFoundException;
@@ -75,7 +76,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //excelExample();
-        System.out.println(Arrays.stream(new String[3]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
+        new StorageOrderUI();
     }
 }
