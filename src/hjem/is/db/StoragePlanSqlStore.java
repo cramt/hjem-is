@@ -7,6 +7,7 @@ import hjem.is.model.StoragePlan;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -37,7 +38,6 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             resultSet.next();
             int id = resultSet.getInt("GENERATED_KEYS");
             storagePlan.setId(id);
-
 
 
             if (storagePlan.getStorageMetaData().getId() == null) {
@@ -72,7 +72,17 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
 
     @Override
     public List<StoragePlan> getAll() throws DataAccessException {
-        return null;
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT name, active, storage_plans.id as s_id, percent_inventory_cost, storage_meta_data.id as md_id FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.id = storage_meta_data.storage_plan_id");
+            NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+            List<StoragePlan> plans = new ArrayList<>();
+            while (result.next()) {
+                plans.add(new StoragePlan(result.getString("name"), result.getBool("active"), new StorageMetaData(result.getFloat("percent_inventory_cost"), result.getInt("md_id")), null, result.getInt("s_id")));
+            }
+            return plans;
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 
     @Override
