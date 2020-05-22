@@ -1,23 +1,22 @@
 package hjem.is.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 public class StorageOrder {
     private LocalDateTime sentDate;
     private String trackingId;
     private Supplier supplier;
-    private List<ProductLine> orders;
+    private List<OrderProductLine> orders;
     private Integer id = null;
 
-    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<ProductLine> orders) {
+    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<OrderProductLine> orders) {
         this.sentDate = sentDate;
         this.trackingId = trackingId;
         this.supplier = supplier;
         this.orders = orders;
     }
 
-    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<ProductLine> orders, int id) {
+    public StorageOrder(LocalDateTime sentDate, String trackingId, Supplier supplier, List<OrderProductLine> orders, int id) {
         this(sentDate, trackingId, supplier, orders);
         this.id = id;
     }
@@ -50,11 +49,11 @@ public class StorageOrder {
         this.supplier = supplier;
     }
 
-    public List<ProductLine> getOrders() {
+    public List<OrderProductLine> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<ProductLine> orders) {
+    public void setOrders(List<OrderProductLine> orders) {
         this.orders = orders;
     }
 }

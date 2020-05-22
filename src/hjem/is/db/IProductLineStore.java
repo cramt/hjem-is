@@ -1,9 +1,9 @@
 package hjem.is.db;
 
-import hjem.is.model.ProductLine;
+import hjem.is.model.OrderProductLine;
 
 import java.util.List;
 
 public interface IProductLineStore {
-    List<ProductLine> getCurrentlyStored() throws DataAccessException;
+    List<OrderProductLine> getCurrentlyStored() throws DataAccessException;
 }

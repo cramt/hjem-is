@@ -1,6 +1,6 @@
 package hjem.is.controller;
 
-import hjem.is.model.ProductLine;
+import hjem.is.model.OrderProductLine;
 import hjem.is.model.StorageOrder;
 import hjem.is.model.Supplier;
 
@@ -42,11 +42,11 @@ public class StorageOrderController {
         storageOrder.setSupplier(supplier);
     }
 
-    public List<ProductLine> getOrders() {
+    public List<OrderProductLine> getOrders() {
         return storageOrder.getOrders();
     }
 
-    public void setOrders(List<ProductLine> orders) {
+    public void setOrders(List<OrderProductLine> orders) {
         storageOrder.setOrders(orders);
     }
 }

@@ -1,17 +1,13 @@
 package hjem.is.controller;
 
-import hjem.is.db.IProductStore;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.Product;
-import hjem.is.model.ProductLine;
+import hjem.is.model.OrderProductLine;
 import hjem.is.model.Supplier;
 import hjem.is.model.time.Period;
 import hjem.is.model.StorageOrder;
-import hjem.is.model.time.Period;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +23,7 @@ public class PeriodicPlanController {
         Supplier supplier = null;
         Supplier previous = null;
         Map<Product, Integer> map;
-        ArrayList<ProductLine> productLines = new ArrayList<>();
+        ArrayList<OrderProductLine> orderProductLines = new ArrayList<>();
         ArrayList<StorageOrder> orders = new ArrayList<>();
 
         //for each product and amount, add that product and amount to ProductLine List on StorageOrder
@@ -35,17 +31,17 @@ public class PeriodicPlanController {
             supplier = entry.getKey().getSupplier();
             //if not new supplier, add productLine
             if (previous == null || previous.equals(supplier)) {
-                productLines.add(new ProductLine(entry.getKey(), entry.getValue()));
+                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
                 previous = supplier;
             } else {
                 //if new supplier, make storageOrder and run again
-                orders.add(new StorageOrder(null, null, previous, productLines));
-                productLines.clear();
-                productLines.add(new ProductLine(entry.getKey(), entry.getValue()));
+                orders.add(new StorageOrder(null, null, previous, orderProductLines));
+                orderProductLines.clear();
+                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
                 previous = supplier;
             }
         }
-        orders.add(new StorageOrder(null, null, supplier, productLines));
+        orders.add(new StorageOrder(null, null, supplier, orderProductLines));
 
         return orders;
     }
