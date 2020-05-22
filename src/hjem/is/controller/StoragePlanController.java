@@ -24,10 +24,10 @@ public class StoragePlanController {
     public StoragePlan generateNew(String name) {
         List<PeriodicPlan> periodicPlans = new ArrayList<>();
         current = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
-        int i = 356;
-        while (i > 1) {
+        int i = 0;
+        while (i < 356) {
             int s = i;
-            i -= 7;
+            i += 7;
             int e = i;
             periodicPlans.add(new PeriodicPlan(new HashMap<>(), new Period(s, e), new ArrayList<>()));
         }

@@ -4,31 +4,34 @@ import hjem.is.controller.StoragePlanController;
 import hjem.is.model.StorageOrder;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
+import javafx.scene.layout.FlowPane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayStorageOrderUI extends MyFrame {
     public DisplayStorageOrderUI(StoragePlanController controller) {
-        List<JComponent> components = new ArrayList<>();
+
+
         JTextField name = new JTextField(controller.getName());
-        components.add(name);
+        add(name);
         JToggleButton active = new JToggleButton("active");
-        components.add(active);
+        add(active);
         List<Period> periods = controller.getPeriods();
+        JScrollPane scroll = new JScrollPane();
         for (int i = 0; i < periods.size(); i++) {
             Period period = periods.get(i);
             JButton button = new JButton("period: " + period.getStart() + " - " + period.getEnd());
-            components.add(button);
+            scroll.add(button);
             final int finalI = i;
             button.addActionListener(e -> {
                 new PeriodicOderUI(controller.getPeriodicPlan(finalI));
             });
         }
-
-        order(components);
+        add(scroll);
 
         setSize(400, 400);
 
