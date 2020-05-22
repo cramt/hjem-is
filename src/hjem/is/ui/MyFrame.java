@@ -1,6 +1,7 @@
 package hjem.is.ui;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class MyFrame extends JFrame {
@@ -11,5 +12,9 @@ public class MyFrame extends JFrame {
             component.setBounds(0, i, 150, 30);
             i += 30;
         }
+    }
+
+    protected void close(){
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 }

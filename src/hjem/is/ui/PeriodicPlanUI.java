@@ -4,7 +4,7 @@ import hjem.is.controller.PeriodicPlanController;
 
 import javax.swing.*;
 
-public class PeriodicPlanUI extends JFrame {
+public class PeriodicPlanUI extends MyFrame {
     public PeriodicPlanUI(PeriodicPlanController plan) {
         setSize(400, 400);
         setContentPane(new JPanel());

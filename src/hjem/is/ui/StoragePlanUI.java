@@ -16,7 +16,10 @@ public class StoragePlanUI extends MyFrame {
         getContentPane().add(panel);
         JButton save = new JButton("save");
         panel.add(save);
-        save.addActionListener(e->controller.save());
+        save.addActionListener(e->{
+            controller.save();
+            close();
+        });
         JTextField name = new JTextField(controller.getName());
         panel.add(name);
         name.addActionListener(e -> controller.setName(name.getText()));
@@ -33,7 +36,7 @@ public class StoragePlanUI extends MyFrame {
             panel.add(button);
             final int finalI = i;
             button.addActionListener(e -> {
-                new PeriodicPlanUI(controller.getPeriodicPlan(finalI));
+                new PeriodicPlanUI(controller.getPeriodicPlanController(finalI));
             });
         }
         panel.add(new JScrollPane(scroll));

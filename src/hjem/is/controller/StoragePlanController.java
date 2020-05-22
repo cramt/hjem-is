@@ -23,6 +23,10 @@ public class StoragePlanController {
         store = new StoragePlanSqlStore();
     }
 
+    public StoragePlan get(){
+        return current;
+    }
+
     public StoragePlan generateNew(String name) {
         List<PeriodicPlan> periodicPlans = new ArrayList<>();
         current = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
@@ -48,8 +52,8 @@ public class StoragePlanController {
         return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
 
-    public PeriodicPlanController getPeriodicPlan(int index) {
-        return new PeriodicPlanController(current.getPeriodicPlans().get(index));
+    public PeriodicPlanController getPeriodicPlanController(int index) {
+        return new PeriodicPlanController(this, index);
     }
 
     public void select(String name) {
