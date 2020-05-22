@@ -8,6 +8,7 @@ import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
 
 import javax.print.attribute.standard.ReferenceUriSchemesSupported;
+import javax.swing.text.SimpleAttributeSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,10 @@ public class StoragePlanController {
         return current.getName();
     }
 
+    public void setName(String name) {
+        current.setName(name);
+    }
+
     public List<Period> getPeriods() {
         return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
@@ -45,6 +50,23 @@ public class StoragePlanController {
     public PeriodicPlanController getPeriodicPlan(int index) {
         return new PeriodicPlanController(current.getPeriodicPlans().get(index));
     }
+
+    public void select(String name) {
+        try {
+            current = store.getByName(name);
+        } catch (DataAccessException ignored) {
+
+        }
+    }
+
+    public boolean isActive() {
+        return current.isActive();
+    }
+
+    public void setActive(boolean active) {
+        current.setActive(active);
+    }
+
 
     public List<String> getNames() {
         try {

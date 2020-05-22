@@ -1,24 +1,23 @@
 package hjem.is.ui;
 
-import hjem.is.controller.StorageOrderController;
 import hjem.is.controller.StoragePlanController;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageOrderUI extends MyFrame {
+public class StoragePlanListUI extends MyFrame {
 
     StoragePlanController controller;
 
-    public StorageOrderUI() {
+    public StoragePlanListUI() {
         controller = new StoragePlanController();
         List<JComponent> components = new ArrayList<>();
         JButton generateNew = new JButton("Generate New");
         components.add(generateNew);
         generateNew.addActionListener(e -> {
             controller.generateNew("new name");
-            new DisplayStorageOrderUI(controller);
+            new StoragePlanUI(controller);
         });
         JLabel label = new JLabel("current storage plans");
         components.add(label);

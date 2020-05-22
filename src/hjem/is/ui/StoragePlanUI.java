@@ -1,29 +1,28 @@
 package hjem.is.ui;
 
 import hjem.is.controller.StoragePlanController;
-import hjem.is.model.StorageOrder;
-import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
-import javafx.scene.layout.FlowPane;
 
 import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayStorageOrderUI extends MyFrame {
-    public DisplayStorageOrderUI(StoragePlanController controller) {
+public class StoragePlanUI extends MyFrame {
+    public StoragePlanUI(StoragePlanController controller) {
         setSize(400, 400);
         setContentPane(new JPanel());
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 400, 400);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         getContentPane().add(panel);
+        JButton save = new JButton("save");
+        panel.add(save);
         JTextField name = new JTextField(controller.getName());
         panel.add(name);
+        name.addActionListener(e -> controller.setName(name.getText()));
         JToggleButton active = new JToggleButton("active");
         panel.add(active);
+        active.setSelected(controller.isActive());
+        active.addActionListener(e -> controller.setActive(active.isSelected()));
         List<Period> periods = controller.getPeriods();
         JPanel scroll = new JPanel();
         scroll.setAutoscrolls(true);
@@ -33,7 +32,7 @@ public class DisplayStorageOrderUI extends MyFrame {
             panel.add(button);
             final int finalI = i;
             button.addActionListener(e -> {
-                new PeriodicOderUI(controller.getPeriodicPlan(finalI));
+                new PeriodicPlanUI(controller.getPeriodicPlan(finalI));
             });
         }
         panel.add(new JScrollPane(scroll));

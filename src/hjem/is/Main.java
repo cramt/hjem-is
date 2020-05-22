@@ -1,19 +1,14 @@
 package hjem.is;
 
 import hjem.is.controller.regression.*;
-import hjem.is.ui.StorageOrderUI;
-import hjem.is.utilities.Combination;
+import hjem.is.ui.StoragePlanListUI;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -76,6 +71,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new StorageOrderUI();
+        new StoragePlanListUI();
     }
 }
