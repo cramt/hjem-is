@@ -8,15 +8,10 @@ import java.util.List;
 
 public class StoragePlanUI extends MyFrame {
     public StoragePlanUI(StoragePlanController controller) {
-        setSize(400, 400);
-        setContentPane(new JPanel());
-        JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 400, 400);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        getContentPane().add(panel);
+        JPanel panel = makeMainPanel();
         JButton save = new JButton("save");
         panel.add(save);
-        save.addActionListener(e->{
+        save.addActionListener(e -> {
             controller.save();
             close();
         });

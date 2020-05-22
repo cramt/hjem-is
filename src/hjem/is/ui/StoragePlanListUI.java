@@ -12,21 +12,19 @@ public class StoragePlanListUI extends MyFrame {
 
     public StoragePlanListUI() {
         controller = new StoragePlanController();
-        List<JComponent> components = new ArrayList<>();
+        JPanel panel = makeMainPanel();
         JButton generateNew = new JButton("Generate New");
-        components.add(generateNew);
+        panel.add(generateNew);
         generateNew.addActionListener(e -> {
             controller.generateNew("new name");
             new StoragePlanUI(controller);
         });
         JLabel label = new JLabel("current storage plans");
-        components.add(label);
+        panel.add(label);
         for (String name : controller.getNames()) {
             JButton button = new JButton(name);
-            components.add(button);
+            panel.add(button);
         }
-
-        order(components);
 
         setSize(400, 400);
 
