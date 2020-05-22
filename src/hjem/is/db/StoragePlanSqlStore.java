@@ -3,6 +3,7 @@ package hjem.is.db;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StorageMetaData;
 import hjem.is.model.StoragePlan;
+import hjem.is.model.time.Period;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -21,7 +22,24 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
 
     @Override
     public StoragePlan getByName(String name) throws DataAccessException {
-        return null;
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT storage_plans.id as p_id, active, storage_meta_data.id as md_id, percent_inventory_cost FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.storage_meta_data_id = storage_meta_data.id WHERE name = ?");
+            stmt.setString(1, name);
+            NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+            if (result.next()) {
+                StoragePlan storagePlan = new StoragePlan(name, result.getBool("active"), new StorageMetaData(result.getFloat("percent_inventory_cost"), result.getInt("md_id")), new ArrayList<>(), result.getInt("p_id"));
+                stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT id, start_period, end_period FROM periodic_plans WHERE storage_plan_id = ?");
+                result = new NullableResultSet(stmt.executeQuery());
+                while (result.next()) {
+                    storagePlan.getPeriodicPlans().add(new PeriodicPlan(null, new Period(result.getInt("start_period"), result.getInt("end_period")), null, result.getInt("id")));
+                }
+                return storagePlan;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -110,7 +128,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             throw new IllegalArgumentException("this object isnt in the database and cant be updated");
         }
         try {
-            if(storagePlan.isActive()){
+            if (storagePlan.isActive()) {
                 resetActive();
             }
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET name = ?, active = ? WHERE id = ?");
