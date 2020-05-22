@@ -21,7 +21,7 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
     public PeriodicPlan getById(int id) throws DataAccessException {
         try {
             FutureTask<Map<Product, Integer>> mapFuture = new FutureTask<>(() -> {
-                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE periodic_plan_id = ?");
+                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM plan_line INNER JOIN products ON plan_line.product_id = products.id WHERE periodic_plan_id = ?");
                 stmt.setInt(1, id);
                 NullableResultSet result = new NullableResultSet(stmt.executeQuery());
                 Map<Product, Integer> map = new HashMap<>();
@@ -62,7 +62,7 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
                 int id = result.getInt("id");
                 plans.put(id, new PeriodicPlan(new HashMap<>(), new Period(result.getInt("start_period"), result.getInt("end_period")), null, id));
             }
-            stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE " + Arrays.stream(new String[plans.size()]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
+            stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM plan_line INNER JOIN products ON plan_line.product_id = products.id WHERE " + Arrays.stream(new String[plans.size()]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
             int i = 1;
             for (Integer key : plans.keySet()) {
                 stmt.setInt(i++, key);

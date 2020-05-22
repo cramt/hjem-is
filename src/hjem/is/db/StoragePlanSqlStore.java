@@ -30,29 +30,33 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
     @Override
     public void add(StoragePlan storagePlan) throws DataAccessException {
         try {
-            if (storagePlan.isActive()) {
-                DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
-            }
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_plans (name, active) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, storagePlan.getName());
-            stmt.setInt(2, storagePlan.isActive() ? 1 : 0);
-            stmt.execute();
-            NullableResultSet resultSet = new NullableResultSet(stmt.getGeneratedKeys());
-            resultSet.next();
-            int id = resultSet.getInt("GENERATED_KEYS");
-            storagePlan.setId(id);
-
-
-            if (storagePlan.getStorageMetaData().getId() == null) {
+            Integer metaDataId = storagePlan.getStorageMetaData().getId();
+            if (metaDataId == null) {
                 try {
-                    PreparedStatement sstmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_meta_data (percent_inventory_cost, storage_plan_id) VALUES (?, ?)");
-                    sstmt.setFloat(1, storagePlan.getStorageMetaData().getPercentInventoryCost());
-                    sstmt.setInt(2, id);
-                    sstmt.execute();
+                    PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_meta_data (percent_inventory_cost) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                    stmt.setFloat(1, storagePlan.getStorageMetaData().getPercentInventoryCost());
+                    stmt.execute();
+                    NullableResultSet result = new NullableResultSet(stmt.getGeneratedKeys());
+                    result.next();
+                    metaDataId = result.getGeneratedKey();
+
                 } catch (SQLException e) {
                     throw new DataAccessException(e.getMessage(), e);
                 }
             }
+
+            if (storagePlan.isActive()) {
+                DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
+            }
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_plans (name, active, storage_meta_data_id) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, storagePlan.getName());
+            stmt.setInt(2, storagePlan.isActive() ? 1 : 0);
+            stmt.setInt(3, metaDataId);
+            stmt.execute();
+            NullableResultSet resultSet = new NullableResultSet(stmt.getGeneratedKeys());
+            resultSet.next();
+            int id = resultSet.getGeneratedKey();
+            storagePlan.setId(id);
 
             if (storagePlan.getPeriodicPlans().size() != 0) {
                 try {
@@ -76,7 +80,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
     @Override
     public List<StoragePlan> getAll() throws DataAccessException {
         try {
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT name, active, storage_plans.id as s_id, percent_inventory_cost, storage_meta_data.id as md_id FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.id = storage_meta_data.storage_plan_id");
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT name, active, storage_plans.id as s_id, percent_inventory_cost, storage_meta_data.id as md_id FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.storage_meta_data_id = storage_meta_data.id");
             NullableResultSet result = new NullableResultSet(stmt.executeQuery());
             List<StoragePlan> plans = new ArrayList<>();
             while (result.next()) {
