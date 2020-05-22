@@ -14,26 +14,29 @@ import java.util.List;
 
 public class DisplayStorageOrderUI extends MyFrame {
     public DisplayStorageOrderUI(StoragePlanController controller) {
-
-
+        setSize(400, 400);
+        setContentPane(new JPanel());
+        JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 400, 400);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        getContentPane().add(panel);
         JTextField name = new JTextField(controller.getName());
-        add(name);
+        panel.add(name);
         JToggleButton active = new JToggleButton("active");
-        add(active);
+        panel.add(active);
         List<Period> periods = controller.getPeriods();
-        JScrollPane scroll = new JScrollPane();
+        JPanel scroll = new JPanel();
+        scroll.setAutoscrolls(true);
         for (int i = 0; i < periods.size(); i++) {
             Period period = periods.get(i);
             JButton button = new JButton("period: " + period.getStart() + " - " + period.getEnd());
-            scroll.add(button);
+            panel.add(button);
             final int finalI = i;
             button.addActionListener(e -> {
                 new PeriodicOderUI(controller.getPeriodicPlan(finalI));
             });
         }
-        add(scroll);
-
-        setSize(400, 400);
+        panel.add(new JScrollPane(scroll));
 
         setLayout(null);
 
