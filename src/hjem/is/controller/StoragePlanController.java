@@ -9,6 +9,7 @@ import hjem.is.model.time.Period;
 
 import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import javax.swing.text.SimpleAttributeSet;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,4 +95,16 @@ public class StoragePlanController {
         }
     }
 
+    public void save() {
+        try {
+            if(current.getId() == null){
+                store.add(current);
+            }
+            else{
+                store.update(current);
+            }
+        } catch (DataAccessException ignored) {
+
+        }
+    }
 }

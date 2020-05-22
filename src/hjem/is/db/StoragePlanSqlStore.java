@@ -10,9 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
 public class StoragePlanSqlStore implements IStoragePlanStore {
@@ -46,7 +43,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             }
 
             if (storagePlan.isActive()) {
-                DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
+                resetActive();
             }
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO storage_plans (name, active, storage_meta_data_id) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, storagePlan.getName());
@@ -95,7 +92,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
     @Override
     public StoragePlan getActive() throws DataAccessException {
         try {
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT storage_plans.id as plan_id, name, active, storage_meta_data.id as meta_data_id, percent_inventory_cost FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.id = storage_meta_data.storage_plan_id WHERE active = 1");
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT storage_plans.id as plan_id, name, active, storage_meta_data.id as meta_data_id, percent_inventory_cost FROM storage_plans INNER JOIN storage_meta_data ON storage_plans.storage_meta_data_id = storage_meta_data.id WHERE active = 1");
             NullableResultSet result = new NullableResultSet(stmt.executeQuery());
             if (result.next()) {
                 return new StoragePlan(result.getString("name"), result.getBool("active"), new StorageMetaData(result.getFloat("percent_inventory_cost"), result.getInt("meta_data_id")), null, result.getInt("plan_id"));
@@ -113,6 +110,9 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             throw new IllegalArgumentException("this object isnt in the database and cant be updated");
         }
         try {
+            if(storagePlan.isActive()){
+                resetActive();
+            }
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET name = ?, active = ? WHERE id = ?");
             stmt.setString(1, storagePlan.getName());
             stmt.setInt(2, storagePlan.isActive() ? 1 : 0);
@@ -121,5 +121,9 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+    }
+
+    private void resetActive() throws DataAccessException, SQLException {
+        DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
     }
 }

@@ -16,6 +16,7 @@ public class StoragePlanUI extends MyFrame {
         getContentPane().add(panel);
         JButton save = new JButton("save");
         panel.add(save);
+        save.addActionListener(e->controller.save());
         JTextField name = new JTextField(controller.getName());
         panel.add(name);
         name.addActionListener(e -> controller.setName(name.getText()));
