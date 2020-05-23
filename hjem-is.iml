@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>
@@ -17,20 +17,9 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/commons-math3-3.6.1-tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="mockito-all-1.9.5" level="project" />
-    <orderEntry type="library" name="junit-jupiter-api-5.1.0" level="project" />
-    <orderEntry type="library" name="poi-4.1" level="project" />
-    <orderEntry type="library" name="ooxml-lib" level="project" />
-    <orderEntry type="library" name="poi_lib" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="org.mockito:mockito-core:3.3.3" level="project" />
+    <orderEntry type="library" exported="" name="org.mockito:mockito-junit-jupiter:3.3.3" level="project" />
+    <orderEntry type="library" name="org.junit.jupiter:junit-jupiter-api:5.4.2" level="project" />
   </component>
 </module>
