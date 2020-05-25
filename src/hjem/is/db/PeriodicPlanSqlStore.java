@@ -21,7 +21,7 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
     public PeriodicPlan getById(int id) throws DataAccessException {
         try {
             FutureTask<Map<Product, Integer>> mapFuture = new FutureTask<>(() -> {
-                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE periodic_plan_id = ?");
+                PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM plan_lines INNER JOIN products ON plan_lines.product_id = products.id WHERE periodic_plan_id = ?");
                 stmt.setInt(1, id);
                 NullableResultSet result = new NullableResultSet(stmt.executeQuery());
                 Map<Product, Integer> map = new HashMap<>();
@@ -62,7 +62,7 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
                 int id = result.getInt("id");
                 plans.put(id, new PeriodicPlan(new HashMap<>(), new Period(result.getInt("start_period"), result.getInt("end_period")), null, id));
             }
-            stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM periodic_plans_products_map INNER JOIN products ON periodic_plans_products_map.product_id = products.id WHERE " + Arrays.stream(new String[plans.size()]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
+            stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT product_id, amount, periodic_plan_id, cost, name FROM plan_lines INNER JOIN products ON plan_lines.product_id = products.id WHERE " + Arrays.stream(new String[plans.size()]).map(x -> "periodic_plan_id = ?").collect(Collectors.joining(" OR ")));
             int i = 1;
             for (Integer key : plans.keySet()) {
                 stmt.setInt(i++, key);
@@ -81,8 +81,11 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
 
     @Override
     public void add(PeriodicPlan periodicPlan, StoragePlan storagePlan) throws DataAccessException {
+        if (storagePlan.getId() == null) {
+            new StoragePlanSqlStore().add(storagePlan);
+        }
         try {
-            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO periodic_plans (start_period, end_period, storage_plan_id) VALUES (?, ?, ?)");
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO periodic_plans (start_period, end_period, storage_plan_id) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, periodicPlan.getPeriod().getStart());
             stmt.setInt(2, periodicPlan.getPeriod().getEnd());
             stmt.setInt(3, storagePlan.getId());
@@ -90,8 +93,61 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
             if (!storagePlan.getPeriodicPlans().contains(periodicPlan)) {
                 storagePlan.getPeriodicPlans().add(periodicPlan);
             }
+            NullableResultSet result = new NullableResultSet(stmt.getGeneratedKeys());
+            result.next();
+            periodicPlan.setId(result.getGeneratedKey());
+            addProducts(periodicPlan);
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void delete(List<PeriodicPlan> plans) throws DataAccessException {
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM periodic_plans WHERE " + Arrays.stream(new String[plans.size()]).map(x -> ("id = ?")).collect(Collectors.joining(" OR ")));
+            int i = 1;
+            for (PeriodicPlan plan : plans) {
+                stmt.setInt(i++, plan.getId());
+            }
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void update(PeriodicPlan plan, boolean products) throws DataAccessException {
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("UPDATE periodic_plans SET start_period = ?, end_period = ? WHERE id = ?");
+            stmt.setInt(1, plan.getPeriod().getStart());
+            stmt.setInt(2, plan.getPeriod().getEnd());
+            stmt.setInt(3, plan.getId());
+            stmt.execute();
+            if (products) {
+                stmt = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM plan_lines WHERE periodic_plan_id = ?");
+                stmt.setInt(1, plan.getId());
+                stmt.execute();
+                addProducts(plan);
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void update(PeriodicPlan plan) throws DataAccessException {
+        update(plan, true);
+    }
+
+    private void addProducts(PeriodicPlan plan) throws SQLException, DataAccessException {
+        PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO plan_lines (amount, product_id, periodic_plan_id) VALUES " + Arrays.stream(new String[plan.getProductMap().size()]).map(x -> ("(?, ?, ?)")).collect(Collectors.joining(",")));
+        int i = 1;
+        for (Map.Entry<Product, Integer> productIntegerEntry : plan.getProductMap().entrySet()) {
+            stmt.setInt(i++, productIntegerEntry.getValue());
+            stmt.setInt(i++, productIntegerEntry.getKey().getId());
+            stmt.setInt(i++, plan.getId());
+        }
+        stmt.execute();
     }
 }

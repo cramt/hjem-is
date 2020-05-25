@@ -1,16 +1,16 @@
 package hjem.is.model;
 
-public class ProductLine {
+public class OrderProductLine {
     private Product product;
     private int amount;
     private Integer id = null;
 
-    public ProductLine(Product product, int amount) {
+    public OrderProductLine(Product product, int amount) {
         this.product = product;
         this.amount = amount;
     }
 
-    public ProductLine(Product product, int amount, Integer id) {
+    public OrderProductLine(Product product, int amount, int id) {
         this(product, amount);
         this.id = id;
     }

@@ -77,14 +77,6 @@ public class NullableResultSet {
         return set.getString(str);
     }
 
-    public LocalDateTime getDateTime(int i) throws SQLException {
-        java.sql.Timestamp res = set.getTimestamp(i);
-        if (res == null) {
-            return null;
-        }
-        return res.toLocalDateTime();
-    }
-
     public Boolean getBool(String str) throws SQLException {
         Byte b = getByte(str);
         if (b == null) {
@@ -107,5 +99,17 @@ public class NullableResultSet {
             return null;
         }
         return res.toLocalDateTime();
+    }
+
+    public LocalDateTime getDateTime(int i) throws SQLException {
+        java.sql.Timestamp res = set.getTimestamp(i);
+        if (res == null) {
+            return null;
+        }
+        return res.toLocalDateTime();
+    }
+
+    public int getGeneratedKey() throws SQLException {
+        return getInt("GENERATED_KEYS");
     }
 }

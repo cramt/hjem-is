@@ -17,13 +17,17 @@ public class PeriodicPlan {
         this.storageOrders = storageOrders;
     }
 
-    public PeriodicPlan(Map<Product, Integer> productMap, Period period, List<StorageOrder> storageOrders, Integer id) {
+    public PeriodicPlan(Map<Product, Integer> productMap, Period period, List<StorageOrder> storageOrders, int id) {
         this(productMap, period, storageOrders);
         this.id = id;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Map<Product, Integer> getProductMap() {

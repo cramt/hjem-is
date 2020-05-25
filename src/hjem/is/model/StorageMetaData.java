@@ -8,7 +8,7 @@ public class StorageMetaData {
         this.percentInventoryCost = percentInventoryCost;
     }
 
-    public StorageMetaData(float percentInventoryCost, Integer id) {
+    public StorageMetaData(float percentInventoryCost, int id) {
         this(percentInventoryCost);
         this.id = id;
     }

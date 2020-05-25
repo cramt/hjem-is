@@ -1,51 +1,116 @@
 package hjem.is.controller;
-import hjem.is.model.PeriodicPlan;
-import hjem.is.model.StorageMetaData;
-import hjem.is.model.StorageOrder;
-import hjem.is.model.StoragePlan;
 
+import hjem.is.db.DataAccessException;
+import hjem.is.db.IStoragePlanStore;
+import hjem.is.db.StoragePlanSqlStore;
+import hjem.is.model.PeriodicPlan;
+import hjem.is.model.StoragePlan;
+import hjem.is.model.time.Period;
+
+import javax.print.attribute.standard.ReferenceUriSchemesSupported;
+import javax.swing.text.SimpleAttributeSet;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StoragePlanController {
-    private StoragePlan storagePlan;
+    private StoragePlan current;
+    private IStoragePlanStore store;
 
-    public StoragePlanController(StoragePlan storagePlan) {
-        this.storagePlan = storagePlan;
+    public StoragePlanController() {
+        store = new StoragePlanSqlStore();
+    }
+
+    public StoragePlan get(){
+        return current;
     }
 
     public StoragePlan generateNew(String name) {
-        //Make the method that generates the Plan
-        return storagePlan;
-    }
-    public void createStorageOrder(PeriodicPlan periodicPlan) {
-
-    }
-
-    public void setSPName(String name) {
-        storagePlan.setName(name);
-    }
-
-    public String getSPName() {
-        return storagePlan.getName();
-    }
-
-    public void setStorageMetaData(StorageMetaData storageMetaData) {
-        storagePlan.setStorageMetaData(storageMetaData);
+        final int MAX_DAYS_IN_YEAR = 366;
+        final int DAYS_IN_WEEK = 7;
+        List<PeriodicPlan> periodicPlans = new ArrayList<>();
+        current = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
+        int i = 0;
+        while (i < MAX_DAYS_IN_YEAR) {
+            int s = i;
+            i += DAYS_IN_WEEK;
+            int e = i;
+            periodicPlans.add(new PeriodicPlan(new HashMap<>(), new Period(s, e), new ArrayList<>()));
+        }
+        return current;
     }
 
-    public StorageMetaData getStorageMetaData() {
-        return storagePlan.getStorageMetaData();
+    public String getName() {
+        return current.getName();
     }
 
-    public void setPeriodicPlans(List<PeriodicPlan> periodicPlans) {
-        storagePlan.setPeriodicPlans(periodicPlans);
+    public void setName(String name) {
+        current.setName(name);
     }
 
-    public Integer getID() {
-        return storagePlan.getId();
+    public List<Period> getPeriods() {
+        return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
 
-    public List<PeriodicPlan> getPeriodicPlans() {
-        return storagePlan.getPeriodicPlans();
+    public PeriodicPlanController getPeriodicPlanController(int index) {
+        return new PeriodicPlanController(this, index);
+    }
+
+    public void select(String name) {
+        try {
+            current = store.getByName(name);
+        } catch (DataAccessException ignored) {
+
+        }
+    }
+
+    public boolean isActive() {
+        return current.isActive();
+    }
+
+    public void setActive(boolean active) {
+        current.setActive(active);
+    }
+
+
+    public List<String> getNames() {
+        try {
+            List<StoragePlan> all = store.getAll();
+            if (all.size() == 0) {
+                return new ArrayList<>();
+            }
+            List<StoragePlan> active = all.stream().filter(StoragePlan::isActive).collect(Collectors.toList());
+            if (active.size() == 0) {
+                all.get(0).setActive(true);
+                new Thread(() -> {
+                    try {
+                        store.update(all.get(0));
+                    } catch (DataAccessException ignored) {
+
+                    }
+                }).start();
+            } else {
+                all.remove(active.get(0));
+                all.set(0, active.get(0));
+            }
+            return all.stream().map(StoragePlan::getName).collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    public void save() {
+        try {
+            if(current.getId() == null){
+                store.add(current);
+            }
+            else{
+                store.update(current);
+            }
+        } catch (DataAccessException ignored) {
+
+        }
     }
 }
