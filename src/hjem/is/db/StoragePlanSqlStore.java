@@ -44,6 +44,9 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
 
     @Override
     public void add(StoragePlan storagePlan) throws DataAccessException {
+        if (getByName(storagePlan.getName()) != null) {
+            throw new DataAccessException("this name already exists", null);
+        }
         try {
             Integer metaDataId = storagePlan.getStorageMetaData().getId();
             if (metaDataId == null) {

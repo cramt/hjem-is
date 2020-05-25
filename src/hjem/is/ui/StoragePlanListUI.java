@@ -19,12 +19,18 @@ public class StoragePlanListUI extends MyFrame {
         });
         JLabel label = new JLabel("Nuværende lagerplaner");
         panel.add(label);
+        JPanel storagePlans = new JPanel();
+        panel.add(storagePlans);
         for (String name : controller.getNames()) {
             JButton button = new JButton(name);
-            panel.add(button);
+            storagePlans.add(button);
         }
-
-        setSize(400, 400);
+        controller.addOnSaveListener(x -> {
+            JButton button = new JButton(x.getName());
+            storagePlans.add(button);
+            validate();
+            repaint();
+        });
 
         setLayout(null);
 

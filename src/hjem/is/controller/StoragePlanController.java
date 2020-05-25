@@ -13,17 +13,19 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class StoragePlanController {
     private StoragePlan current;
     private IStoragePlanStore store;
+    private List<Consumer<StoragePlan>> onSaveListeners;
 
     public StoragePlanController() {
         store = new StoragePlanSqlStore();
     }
 
-    public StoragePlan get(){
+    public StoragePlan get() {
         return current;
     }
 
@@ -103,14 +105,31 @@ public class StoragePlanController {
 
     public void save() {
         try {
-            if(current.getId() == null){
+            if (current.getId() == null) {
                 store.add(current);
-            }
-            else{
+            } else {
                 store.update(current);
             }
         } catch (DataAccessException ignored) {
 
         }
+    }
+
+    public void addOnSaveListener(Consumer<StoragePlan> consumer) {
+        onSaveListeners.add(consumer);
+    }
+
+    public void removeOnSaveListener(Consumer<StoragePlan> consumer) {
+        onSaveListeners.remove(consumer);
+    }
+
+    public void onceOnSaveListener(Consumer<StoragePlan> consumer) {
+        addOnSaveListener(new Consumer<StoragePlan>(){
+            @Override
+            public void accept(StoragePlan o) {
+                consumer.accept(o);
+                removeOnSaveListener(this);
+            }
+        });
     }
 }
