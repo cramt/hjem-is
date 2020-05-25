@@ -9,7 +9,7 @@ import java.util.List;
 public class StoragePlanUI extends MyFrame {
     public StoragePlanUI(StoragePlanController controller) {
         JPanel panel = makeMainPanel();
-        JButton save = new JButton("save");
+        JButton save = new JButton("Gem");
         panel.add(save);
         save.addActionListener(e -> {
             controller.save();
@@ -18,7 +18,7 @@ public class StoragePlanUI extends MyFrame {
         JTextField name = new JTextField(controller.getName());
         panel.add(name);
         name.addActionListener(e -> controller.setName(name.getText()));
-        JToggleButton active = new JToggleButton("active");
+        JToggleButton active = new JToggleButton("Aktiv");
         panel.add(active);
         active.setSelected(controller.isActive());
         active.addActionListener(e -> controller.setActive(active.isSelected()));
@@ -27,7 +27,7 @@ public class StoragePlanUI extends MyFrame {
         scroll.setAutoscrolls(true);
         for (int i = 0; i < periods.size(); i++) {
             Period period = periods.get(i);
-            JButton button = new JButton("period: " + period.getStart() + " - " + period.getEnd());
+            JButton button = new JButton("Periode: " + (period.getStart() + 1) + " - " + period.getEnd());
             panel.add(button);
             final int finalI = i;
             button.addActionListener(e -> {
