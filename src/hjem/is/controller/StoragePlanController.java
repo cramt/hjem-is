@@ -28,12 +28,14 @@ public class StoragePlanController {
     }
 
     public StoragePlan generateNew(String name) {
+        final int MAX_DAYS_IN_YEAR = 366;
+        final int DAYS_IN_WEEK = 7;
         List<PeriodicPlan> periodicPlans = new ArrayList<>();
         current = new StoragePlan(name, false, new StorageMetaDataController().get(), periodicPlans);
         int i = 0;
-        while (i < 356) {
+        while (i < MAX_DAYS_IN_YEAR) {
             int s = i;
-            i += 7;
+            i += DAYS_IN_WEEK;
             int e = i;
             periodicPlans.add(new PeriodicPlan(new HashMap<>(), new Period(s, e), new ArrayList<>()));
         }
