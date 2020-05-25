@@ -45,16 +45,15 @@ public class ProductSqlStore implements IProductStore {
     }
 
     @Override
-    public List<Product> getByName(String name) throws DataAccessException {
+    public Product getByName(String name) throws DataAccessException {
         try {
             PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT cost, supplier_id, suppliers.name as s_name, suppliers.delivery_price, suppliers.delivery_speed FROM products INNER JOIN suppliers ON products.supplier_id = suppliers.id WHERE products.name = ?");
             stmt.setString(1, name);
             NullableResultSet result = new NullableResultSet(stmt.executeQuery());
-            List<Product> products = new ArrayList<>();
-            while (result.next()) {
-                products.add(new Product(result.getInt("cost"), name, new Supplier(result.getInt("delivery_speed"), result.getInt("delivery_price"), result.getString("s_name"), result.getInt("supplier_id")), result.getInt("product_id")));
+            if (result.next()) {
+                return new Product(result.getInt("cost"), name, new Supplier(result.getInt("delivery_speed"), result.getInt("delivery_price"), result.getString("s_name"), result.getInt("supplier_id")), result.getInt("product_id"));
             }
-            return products;
+            return null;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }

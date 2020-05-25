@@ -3,8 +3,6 @@ package hjem.is.ui;
 import hjem.is.controller.StoragePlanController;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StoragePlanListUI extends MyFrame {
 
