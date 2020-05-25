@@ -8,6 +8,7 @@ import hjem.is.model.Supplier;
 import hjem.is.model.time.Period;
 import hjem.is.model.StorageOrder;
 import org.apache.commons.math3.geometry.spherical.twod.Circle;
+import org.apache.poi.ss.formula.functions.T;
 
 import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import javax.swing.text.html.Option;
@@ -160,5 +161,48 @@ public class PeriodicPlanController {
             return;
         }
         current.getProductMap().remove(product);
+    }
+
+    public void save() {
+        Thread deleteThread = new Thread(() -> {
+            try {
+                store.delete(toDelete);
+            } catch (DataAccessException ignored) {
+
+            }
+        });
+        Thread update1Thread = new Thread(() -> {
+            try {
+                store.update(left, false);
+            } catch (DataAccessException ignored) {
+
+            }
+        });
+        Thread update2Thread = new Thread(() -> {
+            try {
+                store.update(current);
+            } catch (DataAccessException ignored) {
+
+            }
+        });
+        Thread update3Thread = new Thread(() -> {
+            try {
+                store.update(right, false);
+            } catch (DataAccessException ignored) {
+
+            }
+        });
+        deleteThread.start();
+        update1Thread.start();
+        update2Thread.start();
+        update3Thread.start();
+        try {
+            deleteThread.join();
+            update1Thread.join();
+            update2Thread.join();
+            update3Thread.join();
+        } catch (InterruptedException ignored) {
+
+        }
     }
 }
