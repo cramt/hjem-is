@@ -25,7 +25,7 @@ public class Period {
 
     public int getEnd() {
         if (end < start) {
-            return end + amountOfDaysInYear();
+            return end + amountOfDaysInCurrentYear();
         }
         return end;
     }
@@ -38,7 +38,7 @@ public class Period {
         int now = provider.getTime().getDayOfYear();
         int s = getStart();
         int e = getEnd();
-        return (now > s && now < e) || (now > s - amountOfDaysInYear() && now < e - amountOfDaysInYear());
+        return (now > s && now < e) || (now > s - amountOfDaysInCurrentYear() && now < e - amountOfDaysInCurrentYear());
     }
 
     public int size() {
@@ -49,7 +49,7 @@ public class Period {
         return localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    private int amountOfDaysInYear() {
+    private int amountOfDaysInCurrentYear() {
         return isLeapYear() ? 366 : 365;
     }
 
