@@ -9,7 +9,7 @@ public class PeriodicPlanUI extends MyFrame {
     public PeriodicPlanUI(PeriodicPlanController controller) {
         this.controller = controller;
         JPanel panel = makeMainPanel();
-        JTextField startPeriod = new JTextField("period start");
+        JTextField startPeriod = new JTextField("Periode start");
 
 
 

@@ -11,13 +11,13 @@ public class StoragePlanListUI extends MyFrame {
     public StoragePlanListUI() {
         controller = new StoragePlanController();
         JPanel panel = makeMainPanel();
-        JButton generateNew = new JButton("Generate New");
+        JButton generateNew = new JButton("Generer ny lagerplan");
         panel.add(generateNew);
         generateNew.addActionListener(e -> {
-            controller.generateNew("new name");
+            controller.generateNew("navn");
             new StoragePlanUI(controller);
         });
-        JLabel label = new JLabel("current storage plans");
+        JLabel label = new JLabel("Nuværende lagerplaner");
         panel.add(label);
         for (String name : controller.getNames()) {
             JButton button = new JButton(name);
