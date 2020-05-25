@@ -58,4 +58,18 @@ public class ProductSqlStore implements IProductStore {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Product> getAll() throws DataAccessException {
+        try {
+            NullableResultSet result = new NullableResultSet(DBConnection.getInstance().getConnection().prepareStatement("SELECT id, cost, name FROM products").executeQuery());
+            List<Product> products = new ArrayList<>();
+            while (result.next()) {
+                products.add(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("id")));
+            }
+            return products;
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 }

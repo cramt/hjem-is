@@ -16,28 +16,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PeriodicPlanController {
-    private PeriodicPlan current;
+    private final PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
     private List<PeriodicPlan> toDelete;
-    private IPeriodicPlanStore store;
+    private final IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
-    private IProductStore productStore;
+    private final IProductStore productStore;
+    private List<Product> products;
 
     public PeriodicPlanController(StoragePlanController controller, int index) {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
-        if (controller.get().getPeriodicPlans() != null) {
-            plans = controller.get().getPeriodicPlans();
-        } else {
+        Thread plansThread = new Thread(() -> {
+            if (controller.get().getPeriodicPlans() != null) {
+                plans = controller.get().getPeriodicPlans();
+            } else {
+                try {
+                    plans = store.getByStoragePlan(controller.get());
+                } catch (DataAccessException ignored) {
+
+                }
+            }
+        });
+        Thread productThread = new Thread(() -> {
             try {
-                plans = store.getByStoragePlan(controller.get());
+                products = productStore.getAll();
             } catch (DataAccessException ignored) {
 
             }
+            products = new ArrayList<>();
+            products.add(new Product(30, "isbåd", null));
+            products.add(new Product(20, "guldhorn", null));
+            products.add(new Product(10, "kong-fu", null));
+
+        });
+        plansThread.start();
+        productThread.start();
+        try {
+            plansThread.join();
+            productThread.join();
+        } catch (InterruptedException ignored) {
+
         }
+
         current = plans.get(index);
         int leftIndex = index - 1;
         int rightIndex = index + 1;
@@ -49,6 +74,7 @@ public class PeriodicPlanController {
         }
         left = plans.get(leftIndex);
         right = plans.get(rightIndex);
+
     }
 
     //creates a new order for each new supplier, stacks those together with the same supplier
@@ -142,17 +168,12 @@ public class PeriodicPlanController {
     }
 
     public boolean addProduct(String name) {
-        try {
-            Product product = productStore.getByName(name);
-            if (product == null) {
-                return false;
-            }
-            current.getProductMap().put(product, 1);
-            return true;
-        } catch (DataAccessException ignored) {
-
+        Optional<Product> product = products.stream().filter(x -> x.getName().equals(name)).findFirst();
+        if (product.isEmpty()) {
+            return false;
         }
-        return false;
+        current.getProductMap().put(product.get(), 1);
+        return true;
     }
 
     public void removeProduct(String name) {
@@ -204,5 +225,25 @@ public class PeriodicPlanController {
         } catch (InterruptedException ignored) {
 
         }
+    }
+
+    public int getStartPeriod() {
+        return current.getPeriod().getStart();
+    }
+
+    public int getEndPeriod() {
+        return current.getPeriod().getEnd();
+    }
+
+    public List<String> getUsedNames() {
+        return current.getProductMap().keySet().stream().map(Product::getName).collect(Collectors.toList());
+    }
+
+    public Integer getAmountByName(String name) {
+        return current.getProductMap().get(getByName(name));
+    }
+
+    public List<String> getUnusedNames() {
+        return products.stream().filter(x -> !current.getProductMap().containsKey(x)).map(Product::getName).collect(Collectors.toList());
     }
 }

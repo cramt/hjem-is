@@ -9,4 +9,5 @@ public interface IProductStore {
     void add(Product[] products) throws DataAccessException;
     void add(Product product) throws DataAccessException;
     Product getByName(String name) throws DataAccessException;
+    List<Product> getAll() throws DataAccessException;
 }
