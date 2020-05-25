@@ -37,7 +37,7 @@ public class Combination {
         return combination;
     }
 
-    private static interface RepeatedRecursive {
+    private interface RepeatedRecursive {
         void func(int post, int start, RepeatedRecursive f);
     }
 
