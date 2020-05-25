@@ -7,16 +7,20 @@ import javax.swing.*;
 import java.util.List;
 
 public class StoragePlanUI extends MyFrame {
+    private StoragePlanController controller;
+
     public StoragePlanUI(StoragePlanController controller) {
+        this.controller = controller;
         JPanel panel = makeMainPanel();
         JButton save = new JButton("Gem");
         panel.add(save);
+        JTextField name = new JTextField(controller.getName());
+        panel.add(name);
         save.addActionListener(e -> {
+            controller.setName(name.getText());
             controller.save();
             close();
         });
-        JTextField name = new JTextField(controller.getName());
-        panel.add(name);
         name.addActionListener(e -> controller.setName(name.getText()));
         JToggleButton active = new JToggleButton("Aktiv");
         panel.add(active);
