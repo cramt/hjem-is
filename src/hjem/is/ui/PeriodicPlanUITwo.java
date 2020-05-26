@@ -148,6 +148,8 @@ public class PeriodicPlanUITwo extends MyFrame {
 	            addProduct(productName);
 	     }
 		 
+		 setTitle("Periodeplan for " + (controller.getStartPeriod() + 1) + "-" + controller.getEndPeriod());
+		 
 		 setVisible(true);
 	 }
 	 

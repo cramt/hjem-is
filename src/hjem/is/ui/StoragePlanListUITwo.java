@@ -82,14 +82,15 @@ public class StoragePlanListUITwo extends MyFrame {
             scrollPane.add(savedPlan);
         }
 		
-		/* This thing doesn't work... 
+		/* This thing doesn't work...
 		controller.addOnSaveListener(x -> {
             JButton button = new JButton(x.getName());
             scrollPlansPanel.add(button);
             validate();
             repaint();
         });
-		*/
+        */
+		setTitle("Lagerplaner");
 		
 		setVisible(true);
 	}
