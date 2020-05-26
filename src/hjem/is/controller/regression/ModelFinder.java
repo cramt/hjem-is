@@ -2,11 +2,15 @@ package hjem.is.controller.regression;
 
 import hjem.is.utilities.Combination;
 import hjem.is.utilities.Permutations;
+import org.apache.poi.ss.formula.functions.Mode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 public class ModelFinder {
     private Fittable fittable;
@@ -26,7 +30,7 @@ public class ModelFinder {
     }
 
     public Model run() {
-        ArrayList<Model> models = new ArrayList<>();
+        ArrayList<FutureTask<Model>> modelsFuture = new ArrayList<>();
         for (List<RegressionalFunction> funcs : funcs) {
             HashMap<String, RegressionalFunction> mutations = new HashMap<>();
             int i = 0;
@@ -36,15 +40,29 @@ public class ModelFinder {
                 }
                 mutations.put(feature, funcs.get(i++));
             }
-            models.add(fittable.fit(observations, dependant, mutations));
+            FutureTask<Model> task = new FutureTask<Model>(() -> fittable.fit(observations, dependant, mutations));
+            task.run();
+            modelsFuture.add(task);
         }
+        List<Model> models = modelsFuture.stream().map(x -> {
+            try {
+                return x.get();
+            } catch (InterruptedException | ExecutionException ignored) {
+                return null;
+            }
+        }).collect(Collectors.toList());
         ArrayList<Model> notNaN = new ArrayList<>();
         for (Model model : models) {
             if (!Double.isNaN(model.rSquared)) {
                 notNaN.add(model);
             }
         }
-        notNaN.sort((a, b) -> (int) ((b.rSquared - a.rSquared) * 10000));
-        return notNaN.get(0);
+        Model largest = notNaN.get(0);
+        for (Model model : notNaN) {
+            if (model.rSquared > largest.rSquared) {
+                largest = model;
+            }
+        }
+        return largest;
     }
 }
