@@ -71,7 +71,7 @@ public class StoragePlanController {
         try {
             current = store.getByName(name);
         } catch (DataAccessException ignored) {
-        	
+        	System.out.println(ignored);
         }
     }
 
