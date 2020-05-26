@@ -144,6 +144,17 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
         }
     }
 
+    @Override
+    public void delete(StoragePlan storagePlan) throws DataAccessException {
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM storage_plans WHERE id = ?");
+            stmt.setInt(1, storagePlan.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
     private void resetActive() throws DataAccessException, SQLException {
         DBConnection.getInstance().getConnection().prepareStatement("UPDATE storage_plans SET active = 0").executeUpdate();
     }
