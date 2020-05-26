@@ -18,7 +18,6 @@ public class StoragePlanUITwo extends MyFrame {
         this.controller = controller;
         List<Period> periods = controller.getPeriods();
         
-        
         //Create main window
         //setDefaultCloseOperation()
 		setBounds(100, 100, 1000, 700);
@@ -58,9 +57,9 @@ public class StoragePlanUITwo extends MyFrame {
 		periodicPlanFullPanel.add(scrollPane);
 		//getContentPane().add(scrollPane);
 		
-		JLabel periodPlansLabel = new JLabel("Periode planer:");
+		JLabel periodPlansLabel = new JLabel("Periode planer for " + controller.getName() + ":");
 		periodPlansLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
-		periodPlansLabel.setBounds(0, 0, 167, 32);
+		periodPlansLabel.setBounds(0, 0, 360, 32);
 		periodicPlanFullPanel.add(periodPlansLabel);
 		
 		//Right side of UI
@@ -94,6 +93,11 @@ public class StoragePlanUITwo extends MyFrame {
 		active.setBounds(10, 49, 127, 35);
 		savePanel.add(active);
 		active.setSelected(controller.isActive());
+		
+		JLabel giveNameLabel = new JLabel("Navngiv plan:");
+		giveNameLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 17));
+		giveNameLabel.setBounds(391, 0, 129, 32);
+		periodicPlanFullPanel.add(giveNameLabel);
 		active.addActionListener(e -> controller.setActive(active.isSelected()));
 	    
 		setTitle("Periodeplaner");

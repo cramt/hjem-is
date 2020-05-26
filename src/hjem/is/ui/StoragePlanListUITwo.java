@@ -55,17 +55,12 @@ public class StoragePlanListUITwo extends MyFrame {
 		currentPlansLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 53, 492, 510);
+		scrollPane.setBounds(10, 54, 482, 509);
 		storagePlansPanel.add(scrollPane);
 		
 		JPanel scrollPlansPanel = new JPanel();
 		scrollPane.setViewportView(scrollPlansPanel);
-		GridBagLayout gbl_scrollPlansPanel = new GridBagLayout();
-		gbl_scrollPlansPanel.columnWidths = new int[]{0};
-		gbl_scrollPlansPanel.rowHeights = new int[]{0};
-		gbl_scrollPlansPanel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_scrollPlansPanel.rowWeights = new double[]{Double.MIN_VALUE};
-		scrollPlansPanel.setLayout(gbl_scrollPlansPanel);
+		scrollPlansPanel.setLayout(new BoxLayout(scrollPlansPanel, BoxLayout.Y_AXIS));
 		
 		JButton generateNew = new JButton("Generer ny lagerplan");
 		generateNew.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
@@ -77,10 +72,13 @@ public class StoragePlanListUITwo extends MyFrame {
             new StoragePlanUITwo(controller);
         });
 		
+		
 		for (String name : controller.getNames()) {
-            JButton savedPlan = new JButton(name);
-            scrollPane.add(savedPlan);
-        }
+			JButton savedPlan = new JButton(name);
+			savedPlan.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
+ 			savedPlan.setSize(200, 40);
+    		scrollPlansPanel.add(savedPlan);
+		}
 		
 		/* This thing doesn't work...
 		controller.addOnSaveListener(x -> {

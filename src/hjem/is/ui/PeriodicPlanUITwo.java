@@ -28,7 +28,7 @@ public class PeriodicPlanUITwo extends MyFrame {
 
          //make panel
 	   	 contentPane = new JPanel();
-	   	 setBounds(0, 0, 500, 500);
+	   	 setBounds(100, 100, 500, 500);
 		 setContentPane(contentPane);
 		 contentPane.setLayout(null);
 
