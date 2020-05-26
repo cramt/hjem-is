@@ -22,7 +22,7 @@ public class PeriodicPlanController {
     private final PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
-    private List<PeriodicPlan> toDelete;
+    private List<PeriodicPlan> toDelete = new ArrayList<>();
     private final IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
     private final IProductStore productStore;
@@ -48,11 +48,6 @@ public class PeriodicPlanController {
             } catch (DataAccessException ignored) {
 
             }
-            products = new ArrayList<>();
-            products.add(new Product(30, "isbåd", null));
-            products.add(new Product(20, "guldhorn", null));
-            products.add(new Product(10, "kong-fu", null));
-
         });
         plansThread.start();
         productThread.start();

@@ -6,6 +6,7 @@ import hjem.is.db.StoragePlanSqlStore;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
+import org.apache.poi.util.NotImplemented;
 
 import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import javax.swing.text.SimpleAttributeSet;
@@ -104,6 +105,9 @@ public class StoragePlanController {
     }
 
     public void save() {
+        for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+            onSaveListener.accept(current);
+        }
         try {
             if (current.getId() == null) {
                 store.add(current);
@@ -124,12 +128,23 @@ public class StoragePlanController {
     }
 
     public void onceOnSaveListener(Consumer<StoragePlan> consumer) {
-        addOnSaveListener(new Consumer<StoragePlan>(){
+        addOnSaveListener(new Consumer<StoragePlan>() {
             @Override
             public void accept(StoragePlan o) {
                 consumer.accept(o);
                 removeOnSaveListener(this);
             }
         });
+    }
+
+    public void delete() {
+        if (current.getId() != null) {
+            try {
+                store.delete(current);
+            } catch (DataAccessException ignored) {
+
+            }
+        }
+        current = null;
     }
 }
