@@ -125,7 +125,7 @@ public class StoragePlanController {
     }
 
     public void onceOnSaveListener(Consumer<StoragePlan> consumer) {
-        addOnSaveListener(new Consumer<StoragePlan>(){
+        addOnSaveListener(new Consumer<StoragePlan>() {
             @Override
             public void accept(StoragePlan o) {
                 consumer.accept(o);
@@ -135,10 +135,12 @@ public class StoragePlanController {
     }
 
     public void delete() {
-        try {
-            store.delete(current);
-        } catch (DataAccessException ignored) {
+        if (current.getId() != null) {
+            try {
+                store.delete(current);
+            } catch (DataAccessException ignored) {
 
+            }
         }
         current = null;
     }
