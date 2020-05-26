@@ -22,7 +22,7 @@ public class PeriodicPlanController {
     private final PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
-    private List<PeriodicPlan> toDelete;
+    private List<PeriodicPlan> toDelete = new ArrayList<>();
     private final IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
     private final IProductStore productStore;

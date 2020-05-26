@@ -105,6 +105,9 @@ public class StoragePlanController {
     }
 
     public void save() {
+        for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+            onSaveListener.accept(current);
+        }
         try {
             if (current.getId() == null) {
                 store.add(current);
