@@ -48,11 +48,6 @@ public class PeriodicPlanController {
             } catch (DataAccessException ignored) {
 
             }
-            products = new ArrayList<>();
-            products.add(new Product(30, "isbåd", null));
-            products.add(new Product(20, "guldhorn", null));
-            products.add(new Product(10, "kong-fu", null));
-
         });
         plansThread.start();
         productThread.start();
