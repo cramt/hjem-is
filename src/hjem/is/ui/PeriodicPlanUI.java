@@ -68,12 +68,12 @@ public class PeriodicPlanUI extends MyFrame {
             });
         });
         save.addActionListener(e -> {
-            Integer start = Parse.integer(startPeriodLabel.getText());
-            Integer end = Parse.integer(endPeriodLabel.getText());
+            Integer start = Parse.integer32(startPeriodLabel.getText());
+            Integer end = Parse.integer32(endPeriodLabel.getText());
 
             Map<String, Integer> parsedProducts = productMap.entrySet().stream().collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    v -> Parse.integer(v.getValue().getText())
+                    v -> Parse.integer32(v.getValue().getText())
             ));
             if (start == null) {
                 showError("your start period cannot be parsed");

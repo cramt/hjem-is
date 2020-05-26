@@ -16,7 +16,7 @@ import java.awt.Color;
 
 public class PeriodicPlanUITwo extends MyFrame {
 	 private PeriodicPlanController controller;
-	 private Map<String, JTextField> productMap;   
+	 private Map<String, JTextField> productMap;
 	 private JPanel contentPane;
 	 private JPanel products;
 	 private JTextField startPeriod;
@@ -25,22 +25,22 @@ public class PeriodicPlanUITwo extends MyFrame {
 	 public PeriodicPlanUITwo(PeriodicPlanController controller) {
          this.controller = controller;
          productMap = new HashMap<>();
-         
+
          //make panel
 	   	 contentPane = new JPanel();
 	   	 setBounds(0, 0, 500, 500);
 		 setContentPane(contentPane);
 		 contentPane.setLayout(null);
-		 
+
 		 JPanel panel = new JPanel();
 		 panel.setBounds(10, 11, 484, 461);
 		 contentPane.add(panel);
 		 panel.setLayout(null);
-		 
+
 		 JScrollPane scrollPane = new JScrollPane();
 		 scrollPane.setBounds(10, 145, 464, 305);
 		 panel.add(scrollPane);
-		 
+
 		 products = new JPanel();
 		 products.setBorder(new LineBorder(new Color(0, 0, 0), 5));
 		 scrollPane.setViewportView(products);
@@ -49,37 +49,37 @@ public class PeriodicPlanUITwo extends MyFrame {
 		 startPeriodLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
 		 startPeriodLabel.setBounds(10, 11, 121, 23);
 		 panel.add(startPeriodLabel);
-		 
+
 		 JLabel endPeriodLabel = new JLabel("Periode slut:");
 		 endPeriodLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
 		 endPeriodLabel.setBounds(156, 11, 121, 23);
 		 panel.add(endPeriodLabel);
-		 
+
 		 startPeriod = new JTextField(controller.getStartPeriod() + "");
 		 startPeriod.setText("indtast tal...");
 		 startPeriod.setBounds(10, 45, 106, 28);
 		 panel.add(startPeriod);
 		 startPeriod.setColumns(10);
-		 
+
 		 endPeriod = new JTextField(controller.getEndPeriod() + "");
 		 endPeriod.setText("indtast tal...");
 		 endPeriod.setColumns(10);
 		 endPeriod.setBounds(156, 45, 106, 28);
 		 panel.add(endPeriod);
-		 
+
 		 JLabel productsLabel = new JLabel("Produkter:");
 		 productsLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
 		 productsLabel.setBounds(10, 106, 106, 28);
 		 panel.add(productsLabel);
 		 panel.setBounds(0, 0, 484, 461);
-		 
+
 		 JButton add = new JButton("Tilføj produkt");
 		 add.setFont(new Font("Segoe UI Black", Font.PLAIN, 15));
 		 add.setBounds(156, 101, 140, 28);
 		 panel.add(add);
 		 add.addActionListener(e -> {
 	         List<String> possibleValues = controller.getUnusedNames();
-	         final String selectedValue = (String) JOptionPane.showInputDialog(null,	                    
+	         final String selectedValue = (String) JOptionPane.showInputDialog(null,
 	        	     "Choose one", "Input",
 	                 JOptionPane.INFORMATION_MESSAGE, null,
 	                 possibleValues.toArray(), possibleValues.get(0));
@@ -108,18 +108,18 @@ public class PeriodicPlanUITwo extends MyFrame {
 	             repaint();
 	         });
 	     });
-		 
+
 		 JButton save = new JButton("Gem");
 		 save.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
 		 save.setBounds(343, 14, 131, 41);
 		 panel.add(save);
 		 save.addActionListener(e -> {
-	            Integer start = Parse.integer(startPeriodLabel.getText());
-	            Integer end = Parse.integer(endPeriodLabel.getText());
+	            Integer start = Parse.integer32(startPeriodLabel.getText());
+	            Integer end = Parse.integer32(endPeriodLabel.getText());
 
 	            Map<String, Integer> parsedProducts = productMap.entrySet().stream().collect(Collectors.toMap(
 	                    Map.Entry::getKey,
-	                    v -> Parse.integer(v.getValue().getText())
+	                    v -> Parse.integer32(v.getValue().getText())
 	            ));
 	            if (start == null) {
 	                showError("your start period cannot be parsed");
@@ -142,15 +142,15 @@ public class PeriodicPlanUITwo extends MyFrame {
 	            }
 	            controller.save();
 	        });
-		 
-		 //add 
+
+		 //add
 		 for (String productName : controller.getUsedNames()) {
 	            addProduct(productName);
 	     }
-		 
+
 		 setVisible(true);
 	 }
-	 
+
 	 private void addProduct(String name) {
 	        JPanel productPanel = new JPanel();
 	        products.add(productPanel);
@@ -160,7 +160,7 @@ public class PeriodicPlanUITwo extends MyFrame {
 	        productPanel.add(amount);
 	        productMap.put(name, amount);
 	 }
-	 
+
 	 private void showError(String message) {
 	        JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
 	                JOptionPane.ERROR_MESSAGE);

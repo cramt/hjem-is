@@ -26,7 +26,8 @@ public class ModelFinder {
     }
 
     public ModelFinder(Fittable fittable, Observation[] observations, String dependant) {
-        this(fittable, observations, dependant, new RegressionalFunction[]{x -> Math.pow(x, 3), x -> Math.pow(Math.E, x), x -> x, Math::log});
+        //this(fittable, observations, dependant, new RegressionalFunction[]{x -> Math.pow(x, 3), x -> Math.pow(Math.E, x), x -> x, Math::log});
+        this(fittable, observations, dependant, new RegressionalFunction[]{x -> x});
     }
 
     public Model run() {
