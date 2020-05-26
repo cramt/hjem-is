@@ -19,13 +19,13 @@ public class GradientDescentFit extends AbstractFit {
 
         // Converts the array of Observation objects to a matrix (2-d array) with an extra first column of 1s for the intercept.
         double[][] train = new double[inputVectors[0].size() + 1][inputVectors.length];
-        for (int i = 0; i < inputVectors.length; i++) {
+        for (int i = 0; i < inputVectors.length; i++){
             train[0][i] = 1; // Intercept
             train[train.length - 1][i] = inputVectors[i].getFeature(dependent); // Dependent variable in the last column
             int j = 1;
-            for (String feature : inputVectors[i].getFeatures()) {
-                if (!feature.equals(dependent)) {
-                    train[j][i] = mutations.get(feature).function(inputVectors[i].getFeature(feature));
+            for (String feature : inputVectors[i].getFeatures()){
+                if (!feature.equals(dependent)){
+                    train[j][i] = inputVectors[i].getFeature(feature);
                     j++;
                 }
             }
@@ -36,13 +36,13 @@ public class GradientDescentFit extends AbstractFit {
         double[] temps = new double[thetas.length]; // Parallel array for temp values.
         double delta; // Absolute change in parameters; used to measure convergence
 
-        do {
+        do{
             delta = 0;
 
             // For each parameter theta:
-            for (int i = 0; i < thetas.length; i++) {
+            for (int i = 0; i < thetas.length; i++){
                 // Updates the temp value for that parameter.
-                temps[i] = thetas[i] - (alpha * ((double) 1 / train.length) * evaluateCost(thetas, train, i));
+                temps[i] = thetas[i] - (alpha * ((double) 1/train.length)*evaluateCost(thetas, train, i));
 
                 // Calculates the absolute change in that parameter.
                 delta += Math.abs(thetas[i] - temps[i]);
@@ -51,7 +51,7 @@ public class GradientDescentFit extends AbstractFit {
             // Updates each theta to its temp value.
             for (int i = 0; i < thetas.length; i++)
                 thetas[i] = temps[i];
-        } while (delta > 1E-7); // Threshold at which we conclude that convergence has occurred
+        }while(delta > 1E-7); // Threshold at which we conclude that convergence has occurred
 
         // Destandardises the data and fitted parameters.
         deStandardise(stanData, inputVectors, thetas);
@@ -60,15 +60,15 @@ public class GradientDescentFit extends AbstractFit {
         LinkedHashMap<String, Double> parameters = new LinkedHashMap<String, Double>();
         parameters.put("Intercept", thetas[0]);
         int j = 1;
-        for (String feature : inputVectors[1].getFeatures()) {
-            if (!feature.equals(dependent)) { // Ignores the dependent variable
+        for (String feature : inputVectors[1].getFeatures()){
+            if (!feature.equals(dependent)){ // Ignores the dependent variable
                 parameters.put(feature, thetas[j]);
                 j++;
             }
         }
 
         // Constructs the Model object.
-        Model outputModel = new Model(parameters, dependent, mutations);
+        Model outputModel = new Model(parameters, dependent, 0);
 
         // Calculates r-squared and sets it on the model.
         outputModel.rSquared = calculateRSquared(inputVectors, outputModel);
@@ -78,16 +78,16 @@ public class GradientDescentFit extends AbstractFit {
 
     // Evaluates the cost function (squared error) for a given level of parameters.
     // Used in the update step of gradient descent.
-    private double evaluateCost(double[] thetas, double[][] data, int featureIndex) {
+    private static double evaluateCost(double[] thetas, double[][] data, int featureIndex){
         double result = 0;
 
         // For every row in the dataset:
-        for (int i = 0; i < data[0].length; i++) {
+        for (int i = 0; i < data[0].length; i++){
             double error = 0;
 
             // Calculates the value predicted by the parameters.
             for (int j = 0; j < data.length - 1; j++)
-                error += data[j][i] * thetas[j];
+                error += data[j][i]*thetas[j];
 
             // Subtracts the actual value to get the error and scales by the value in that row for the feature being updated.
             error -= data[data.length - 1][i];

@@ -2,6 +2,7 @@ package hjem.is;
 
 import hjem.is.controller.regression.*;
 import hjem.is.ui.StoragePlanListUI;
+import hjem.is.ui.StoragePlanListUITwo;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -71,6 +72,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new StoragePlanListUI();
+    	//new StoragePlanListUI();
+        new StoragePlanListUITwo();
     }
 }

@@ -25,13 +25,14 @@ public class StoragePlanListUI extends MyFrame {
             JButton button = new JButton(name);
             storagePlans.add(button);
         }
+        /*
         controller.addOnSaveListener(x -> {
             JButton button = new JButton(x.getName());
             storagePlans.add(button);
             validate();
             repaint();
         });
-
+		*/
         setLayout(null);
 
         setVisible(true);

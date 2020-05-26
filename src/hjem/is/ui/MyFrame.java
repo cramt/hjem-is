@@ -10,10 +10,10 @@ public class MyFrame extends JFrame {
     }
 
     protected JPanel makeMainPanel(){
-        setSize(1000, 500);
+        setSize(1000, 700);
         setContentPane(new JPanel());
         JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 1000, 500);
+        panel.setBounds(0, 0, 1000, 700);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         getContentPane().add(panel);
         return panel;
