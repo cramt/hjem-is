@@ -6,6 +6,7 @@ import hjem.is.db.StoragePlanSqlStore;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
+import org.apache.poi.util.NotImplemented;
 
 import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import javax.swing.text.SimpleAttributeSet;
@@ -131,5 +132,9 @@ public class StoragePlanController {
                 removeOnSaveListener(this);
             }
         });
+    }
+
+    public void delete() {
+        throw new UnsupportedOperationException();
     }
 }
