@@ -68,17 +68,25 @@ public class StoragePlanListUITwo extends MyFrame {
 		fullPlansPanel.add(generateNew);
 		generateNew.addActionListener(e -> {
             controller.generateNew("navn");
+            System.out.println("Controller Storageplan name: " + controller.getName());
             //new StoragePlanUI(controller);
             new StoragePlanUITwo(controller);
         });
 		
-		
+		//generate buttons for each already saved StoragePlan
 		for (String name : controller.getNames()) {
 			JButton savedPlan = new JButton(name);
+			savedPlan.addActionListener(e -> {
+				System.out.println("Clicked button name: " + savedPlan.getText());
+				controller.select(savedPlan.getText());
+				System.out.println("Controller Storageplan name: " + controller.getName());
+				new StoragePlanUITwo(controller);
+			});
 			savedPlan.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
  			savedPlan.setSize(200, 40);
     		scrollPlansPanel.add(savedPlan);
 		}
+		
 		
 		/* This thing doesn't work...
 		controller.addOnSaveListener(x -> {

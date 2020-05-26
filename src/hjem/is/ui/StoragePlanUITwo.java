@@ -70,9 +70,12 @@ public class StoragePlanUITwo extends MyFrame {
 
 		//'Name of plan' field
 		nameField = new JTextField();
+		nameField.setToolTipText("Indtast navn");
+		if (controller.getName() != null) {
+			nameField.setText(controller.getName());
+		}
 		nameField.setBounds(10, 6, 416, 32);
 		savePanel.add(nameField);
-		nameField.setText("indtast navn...");
 		nameField.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
 		nameField.setColumns(10);
 		nameField.addActionListener(e -> controller.setName(nameField.getText()));

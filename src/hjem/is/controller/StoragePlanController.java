@@ -21,6 +21,7 @@ public class StoragePlanController {
     private StoragePlan current;
     private IStoragePlanStore store;
     private List<Consumer<StoragePlan>> onSaveListeners;
+    private Consumer<StoragePlan> plans;
 
     public StoragePlanController() {
         store = new StoragePlanSqlStore();
@@ -54,7 +55,12 @@ public class StoragePlanController {
     }
 
     public List<Period> getPeriods() {
-        return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
+    	List<Period> periods = new ArrayList<>();;
+    	for (int i = 0; i < current.getPeriodicPlans().size(); i++) {
+    		periods.add(current.getPeriodicPlans().get(i).getPeriod());
+    	}
+        return periods;
+        //current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
 
     public PeriodicPlanController getPeriodicPlanController(int index) {
@@ -65,7 +71,7 @@ public class StoragePlanController {
         try {
             current = store.getByName(name);
         } catch (DataAccessException ignored) {
-
+        	
         }
     }
 
@@ -105,9 +111,9 @@ public class StoragePlanController {
     }
 
     public void save() {
-        for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+        /*for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
             onSaveListener.accept(current);
-        }
+        }*/
         try {
             if (current.getId() == null) {
                 store.add(current);
