@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class StoragePlanController {
     private StoragePlan current;
     private IStoragePlanStore store;
-    private List<Consumer<StoragePlan>> onSaveListeners;
-    private Consumer<StoragePlan> plans;
-
+    private List<Consumer<StoragePlan>> onSaveListeners = new ArrayList<>();
+    //private Consumer<StoragePlan> plans;
+    
     public StoragePlanController() {
         store = new StoragePlanSqlStore();
     }
@@ -111,9 +111,9 @@ public class StoragePlanController {
     }
 
     public void save() {
-        /*for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+        for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
             onSaveListener.accept(current);
-        }*/
+        }
         try {
             if (current.getId() == null) {
                 store.add(current);
