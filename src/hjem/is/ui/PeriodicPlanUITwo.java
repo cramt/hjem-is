@@ -56,13 +56,11 @@ public class PeriodicPlanUITwo extends MyFrame {
 		 panel.add(endPeriodLabel);
 
 		 startPeriod = new JTextField(controller.getStartPeriod() + "");
-		 startPeriod.setText("indtast tal...");
 		 startPeriod.setBounds(10, 45, 106, 28);
 		 panel.add(startPeriod);
 		 startPeriod.setColumns(10);
 
 		 endPeriod = new JTextField(controller.getEndPeriod() + "");
-		 endPeriod.setText("indtast tal...");
 		 endPeriod.setColumns(10);
 		 endPeriod.setBounds(156, 45, 106, 28);
 		 panel.add(endPeriod);
@@ -114,8 +112,8 @@ public class PeriodicPlanUITwo extends MyFrame {
 		 save.setBounds(343, 14, 131, 41);
 		 panel.add(save);
 		 save.addActionListener(e -> {
-	            Integer start = Parse.integer32(startPeriodLabel.getText());
-	            Integer end = Parse.integer32(endPeriodLabel.getText());
+	            Integer start = Parse.integer32(startPeriod.getText());
+	            Integer end = Parse.integer32(endPeriod.getText());
 
 	            Map<String, Integer> parsedProducts = productMap.entrySet().stream().collect(Collectors.toMap(
 	                    Map.Entry::getKey,
@@ -147,9 +145,9 @@ public class PeriodicPlanUITwo extends MyFrame {
 		 for (String productName : controller.getUsedNames()) {
 	            addProduct(productName);
 	     }
-		 
+
 		 setTitle("Periodeplan for " + (controller.getStartPeriod() + 1) + "-" + controller.getEndPeriod());
-		 
+
 		 setVisible(true);
 	 }
 
