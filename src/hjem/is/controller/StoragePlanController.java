@@ -135,6 +135,11 @@ public class StoragePlanController {
     }
 
     public void delete() {
-        throw new UnsupportedOperationException();
+        try {
+            store.delete(current);
+        } catch (DataAccessException ignored) {
+
+        }
+        current = null;
     }
 }
