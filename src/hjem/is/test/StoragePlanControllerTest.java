@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +25,7 @@ public class StoragePlanControllerTest {
     @Mock IStoragePlanStore spsMock;
     @Mock PeriodicPlanController ppcMock;
 
-    @InjectMocks StoragePlanController spc = new StoragePlanController();
+    @InjectMocks StoragePlanController spc;
 
     @Test
     public void generatesNewPlanWithNameJuni() {
