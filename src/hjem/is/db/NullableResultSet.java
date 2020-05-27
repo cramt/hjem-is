@@ -1,7 +1,5 @@
 package hjem.is.db;
 
-import org.apache.commons.math3.analysis.function.Sqrt;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;

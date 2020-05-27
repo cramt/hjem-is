@@ -1,17 +1,8 @@
 package hjem.is.controller;
 
 import hjem.is.db.*;
-import hjem.is.model.PeriodicPlan;
-import hjem.is.model.Product;
-import hjem.is.model.OrderProductLine;
-import hjem.is.model.Supplier;
-import hjem.is.model.time.Period;
-import hjem.is.model.StorageOrder;
-import org.apache.commons.math3.geometry.spherical.twod.Circle;
-import org.apache.poi.ss.formula.functions.T;
+import hjem.is.model.*;
 
-import javax.print.attribute.standard.ReferenceUriSchemesSupported;
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +13,7 @@ public class PeriodicPlanController {
     private final PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
-    private List<PeriodicPlan> toDelete;
+    private List<PeriodicPlan> toDelete = new ArrayList<>();
     private final IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
     private final IProductStore productStore;
@@ -32,14 +23,10 @@ public class PeriodicPlanController {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
         Thread plansThread = new Thread(() -> {
-            if (controller.get().getPeriodicPlans() != null) {
-                plans = controller.get().getPeriodicPlans();
-            } else {
-                try {
-                    plans = store.getByStoragePlan(controller.get());
-                } catch (DataAccessException ignored) {
+            try {
+                plans = store.getByStoragePlan(controller.get());
+            } catch (DataAccessException ignored) {
 
-                }
             }
         });
         Thread productThread = new Thread(() -> {
@@ -48,11 +35,6 @@ public class PeriodicPlanController {
             } catch (DataAccessException ignored) {
 
             }
-            products = new ArrayList<>();
-            products.add(new Product(30, "isbåd", null));
-            products.add(new Product(20, "guldhorn", null));
-            products.add(new Product(10, "kong-fu", null));
-
         });
         plansThread.start();
         productThread.start();

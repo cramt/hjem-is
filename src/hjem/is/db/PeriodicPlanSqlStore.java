@@ -71,7 +71,8 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
             while (result.next()) {
                 plans.get(result.getInt("periodic_plan_id")).getProductMap().put(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("product_id")), result.getInt("amount"));
             }
-            List<PeriodicPlan> plansList = Arrays.asList((PeriodicPlan[]) plans.values().toArray());
+
+            List<PeriodicPlan> plansList = plans.values().stream().collect(Collectors.toList());
             storagePlan.setPeriodicPlans(plansList);
             return plansList;
         } catch (SQLException e) {
@@ -141,6 +142,9 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
     }
 
     private void addProducts(PeriodicPlan plan) throws SQLException, DataAccessException {
+        if(plan.getProductMap().size() == 0){
+            return;
+        }
         PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO plan_lines (amount, product_id, periodic_plan_id) VALUES " + Arrays.stream(new String[plan.getProductMap().size()]).map(x -> ("(?, ?, ?)")).collect(Collectors.joining(",")));
         int i = 1;
         for (Map.Entry<Product, Integer> productIntegerEntry : plan.getProductMap().entrySet()) {

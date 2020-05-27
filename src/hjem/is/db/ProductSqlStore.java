@@ -3,7 +3,6 @@ package hjem.is.db;
 import hjem.is.model.Product;
 import hjem.is.model.Supplier;
 
-import javax.swing.text.StyleContext;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
