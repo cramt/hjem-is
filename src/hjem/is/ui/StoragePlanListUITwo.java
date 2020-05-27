@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import java.awt.GridBagLayout;
 
@@ -74,30 +75,64 @@ public class StoragePlanListUITwo extends MyFrame {
         });
 		
 		//generate buttons for each already saved StoragePlan
+		//paintStoragePlans(controller, scrollPlansPanel);
 		for (String name : controller.getNames()) {
 			JButton savedPlan = new JButton(name);
 			savedPlan.addActionListener(e -> {
-				System.out.println("Clicked button name: " + savedPlan.getText());
 				controller.select(savedPlan.getText());
-				System.out.println("Controller Storageplan name: " + controller.getName());
 				new StoragePlanUITwo(controller);
+			});
+			SwingUtilities.invokeLater(() -> {
+	            validate();
+	            repaint();
 			});
 			savedPlan.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
  			savedPlan.setSize(200, 40);
     		scrollPlansPanel.add(savedPlan);
 		}
 		
-		
-		/* This thing doesn't work...
+		//When save is chosen from StoragePlanUI
 		controller.addOnSaveListener(x -> {
-            JButton button = new JButton(x.getName());
-            scrollPlansPanel.add(button);
+			//Remove all buttons
+			scrollPlansPanel.removeAll();
+			makeStoragePlanButton(x.getName());
+			//repaint all buttons
+			paintStoragePlans(controller, scrollPlansPanel);
+			//update UI (Doesn't work)
+			scrollPlansPanel.updateUI();
             validate();
             repaint();
+            setVisible(false);
+            setVisible(true);
         });
-        */
+        
 		setTitle("Lagerplaner");
 		
 		setVisible(true);
 	}
+	
+	public void paintStoragePlans(StoragePlanController controller, JPanel panel) {
+		for (String name : controller.getNames()) {
+			JButton savedPlan = new JButton(name);
+			savedPlan.addActionListener(e -> {
+				controller.select(savedPlan.getText());
+				new StoragePlanUITwo(controller);
+			});
+			SwingUtilities.invokeLater(() -> {
+	            validate();
+	            repaint();
+			});
+			savedPlan.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
+ 			savedPlan.setSize(200, 40);
+    		panel.add(savedPlan);
+		}
+	}
+	
+	public JButton makeStoragePlanButton(String name) {
+		JButton button = new JButton(name);
+        button.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
+        button.setSize(200, 40);
+        return button;
+	}
+	
 }

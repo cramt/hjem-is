@@ -94,7 +94,8 @@ public class StoragePlanUITwo extends MyFrame {
 		JButton delete = new JButton("Slet");
 		delete.setBounds(219, 90, 117, 35);
 		delete.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
-		delete.addActionListener(e->{
+		delete.addActionListener(e -> {
+			
 			controller.delete();
 			close();
 		});
