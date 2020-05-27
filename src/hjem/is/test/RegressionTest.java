@@ -41,7 +41,7 @@ public class RegressionTest {
     public void gradientDecentTest() {
         String dependant = "compressivestrength";
         Model model = new ModelFinder(new GradientDescentFit(0.0001), testData, dependant).run();
-        double predicted = model.predict(testData[500]);
+        double predicted = model.predict(testData[30]);
         double real = testData[30].getFeature(dependant);
         System.out.println("gradient descent r^2 = " + model.rSquared);
         System.out.println("gradient descent precision = " + Math.abs(real - predicted));
@@ -52,7 +52,7 @@ public class RegressionTest {
     public void normalEquationTest() {
         String dependant = "compressivestrength";
         Model model = new ModelFinder(new NormalEquationFit(), testData, dependant).run();
-        double predicted = model.predict(testData[500]);
+        double predicted = model.predict(testData[30]);
         double real = testData[30].getFeature(dependant);
         System.out.println("normal equation r^2 = " + model.rSquared);
         System.out.println("normal equation precision = " + Math.abs(real - predicted));
