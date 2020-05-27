@@ -32,14 +32,10 @@ public class PeriodicPlanController {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
         Thread plansThread = new Thread(() -> {
-            if (controller.get().getPeriodicPlans() != null) {
-                plans = controller.get().getPeriodicPlans();
-            } else {
-                try {
-                    plans = store.getByStoragePlan(controller.get());
-                } catch (DataAccessException ignored) {
+            try {
+                plans = store.getByStoragePlan(controller.get());
+            } catch (DataAccessException ignored) {
 
-                }
             }
         });
         Thread productThread = new Thread(() -> {
