@@ -1,11 +1,9 @@
 package hjem.is.ui;
 
 import hjem.is.controller.PeriodicPlanController;
-import hjem.is.model.Product;
 import hjem.is.utilities.Parse;
 
 import javax.swing.*;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

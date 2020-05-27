@@ -1,18 +1,15 @@
 package hjem.is.ui;
 
 import hjem.is.controller.PeriodicPlanController;
-import hjem.is.model.Product;
 import hjem.is.utilities.Parse;
 
 import javax.swing.*;
-import java.util.AbstractMap;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.awt.Font;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 
 public class PeriodicPlanUITwo extends MyFrame {
     private PeriodicPlanController controller;

@@ -1,8 +1,6 @@
 package hjem.is.controller.regression;
 
 import hjem.is.utilities.Combination;
-import hjem.is.utilities.Permutations;
-import org.apache.poi.ss.formula.functions.Mode;
 
 import java.util.ArrayList;
 import java.util.Arrays;

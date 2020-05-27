@@ -6,11 +6,7 @@ import hjem.is.db.StoragePlanSqlStore;
 import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
-import org.apache.poi.util.NotImplemented;
 
-import javax.print.attribute.standard.ReferenceUriSchemesSupported;
-import javax.swing.text.SimpleAttributeSet;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +18,7 @@ public class StoragePlanController {
     private IStoragePlanStore store;
     private List<Consumer<StoragePlan>> onSaveListeners = new ArrayList<>();
     //private Consumer<StoragePlan> plans;
-    
+
     public StoragePlanController() {
         store = new StoragePlanSqlStore();
     }

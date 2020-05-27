@@ -1,23 +1,21 @@
 package hjem.is;
 
-import hjem.is.controller.regression.*;
+import hjem.is.controller.regression.Model;
+import hjem.is.controller.regression.ModelFinder;
+import hjem.is.controller.regression.NormalEquationFit;
+import hjem.is.controller.regression.Observation;
 import hjem.is.db.*;
 import hjem.is.model.Product;
 import hjem.is.model.Supplier;
-import hjem.is.ui.StoragePlanListUI;
 import hjem.is.ui.StoragePlanListUITwo;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import javax.swing.*;
 
 public class Main {
     private static void regressionExample() {

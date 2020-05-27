@@ -2,22 +2,21 @@ package hjem.is.test;
 
 import hjem.is.controller.PeriodicPlanController;
 import hjem.is.controller.StoragePlanController;
-import hjem.is.controller.regression.ModelFinder;
 import hjem.is.db.DataAccessException;
 import hjem.is.db.IStoragePlanStore;
-import hjem.is.db.StoragePlanSqlStore;
-import hjem.is.model.*;
-import hjem.is.model.time.Period;
+import hjem.is.model.PeriodicPlan;
+import hjem.is.model.StorageMetaData;
+import hjem.is.model.StoragePlan;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
