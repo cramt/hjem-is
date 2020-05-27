@@ -14,7 +14,8 @@ public class SupplierSqlStore implements ISupplierStore {
             stmt.setInt(1, supplier.getDeliverySpeed());
             stmt.setInt(2, supplier.getDeliveryPrice());
             stmt.setString(3, supplier.getName());
-            NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+            stmt.execute();
+            NullableResultSet result = new NullableResultSet(stmt.getGeneratedKeys());
             result.next();
             supplier.setId(result.getGeneratedKey());
         } catch (SQLException e) {

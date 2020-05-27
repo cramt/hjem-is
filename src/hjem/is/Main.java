@@ -88,7 +88,6 @@ public class Main {
                 productStore.add(products);
             }
         } catch (DataAccessException ignored) {
-
         }
         //new StoragePlanListUI();
         new StoragePlanListUITwo();
