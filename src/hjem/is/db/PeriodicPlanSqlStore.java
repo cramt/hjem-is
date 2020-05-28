@@ -7,10 +7,7 @@ import hjem.is.model.StoragePlan;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
@@ -72,7 +69,7 @@ public class PeriodicPlanSqlStore implements IPeriodicPlanStore {
                 plans.get(result.getInt("periodic_plan_id")).getProductMap().put(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("product_id")), result.getInt("amount"));
             }
 
-            List<PeriodicPlan> plansList = plans.values().stream().collect(Collectors.toList());
+            List<PeriodicPlan> plansList = new ArrayList<>(plans.values());
             storagePlan.setPeriodicPlans(plansList);
             return plansList;
         } catch (SQLException e) {

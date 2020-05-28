@@ -51,10 +51,10 @@ public class StoragePlanController {
     }
 
     public List<Period> getPeriods() {
-    	List<Period> periods = new ArrayList<>();;
-    	for (int i = 0; i < current.getPeriodicPlans().size(); i++) {
-    		periods.add(current.getPeriodicPlans().get(i).getPeriod());
-    	}
+        List<Period> periods = new ArrayList<>();
+        for (int i = 0; i < current.getPeriodicPlans().size(); i++) {
+            periods.add(current.getPeriodicPlans().get(i).getPeriod());
+        }
         return periods;
         //current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public class StoragePlanController {
         try {
             current = store.getByName(name);
         } catch (DataAccessException ignored) {
-        	System.out.println(ignored);
+            System.out.println(ignored);
         }
     }
 
@@ -98,7 +98,11 @@ public class StoragePlanController {
                 }).start();
             } else {
                 all.remove(active.get(0));
-                all.set(0, active.get(0));
+                if (all.size() == 0) {
+                    all.add(active.get(0));
+                } else {
+                    all.set(0, active.get(0));
+                }
             }
             return all.stream().map(StoragePlan::getName).collect(Collectors.toList());
         } catch (DataAccessException e) {
