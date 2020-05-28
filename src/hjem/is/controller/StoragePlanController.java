@@ -52,7 +52,6 @@ public class StoragePlanController {
 
     public List<Period> getPeriods() {
         List<Period> periods = new ArrayList<>();
-        ;
         for (int i = 0; i < current.getPeriodicPlans().size(); i++) {
             periods.add(current.getPeriodicPlans().get(i).getPeriod());
         }

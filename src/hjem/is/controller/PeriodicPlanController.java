@@ -10,21 +10,33 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PeriodicPlanController {
-    private final PeriodicPlan current;
+    private PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
     private List<PeriodicPlan> toDelete = new ArrayList<>();
-    private final IPeriodicPlanStore store;
+    private IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
-    private final IProductStore productStore;
+    private IProductStore productStore;
     private List<Product> products;
+    private StoragePlanController spc;
+
+    public PeriodicPlanController() {
+        store = new PeriodicPlanSqlStore();
+        productStore = new ProductSqlStore();
+        spc = new StoragePlanController();
+    }
 
     public PeriodicPlanController(StoragePlanController controller, int index) {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
+        spc = controller;
+        init(index);
+    }
+
+    public void init(int index) {
         Thread plansThread = new Thread(() -> {
             try {
-                plans = store.getByStoragePlan(controller.get());
+                plans = store.getByStoragePlan(spc.get());
             } catch (DataAccessException ignored) {
 
             }
@@ -56,7 +68,6 @@ public class PeriodicPlanController {
         }
         left = plans.get(leftIndex);
         right = plans.get(rightIndex);
-
     }
 
     //creates a new order for each new supplier, stacks those together with the same supplier
