@@ -30,7 +30,6 @@ public class PeriodicPlanController {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
         spc = controller;
-
         init(index);
     }
 

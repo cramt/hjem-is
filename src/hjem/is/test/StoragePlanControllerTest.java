@@ -65,7 +65,6 @@ public class StoragePlanControllerTest {
             verify(spsMock, never()).update(sp);
         } catch (DataAccessException ignored) {
         }
-
     }
 
     @Test
@@ -86,7 +85,7 @@ public class StoragePlanControllerTest {
     }
 
     @Test
-    public void setCurrentPlanActive(){
+    public void setsCurrentPlanActive(){
         StoragePlan sp = new StoragePlan("September", false, new StorageMetaData(100f), new ArrayList<PeriodicPlan>(), 1);
         try {
             when(spsMock.getByName("September")).thenReturn(sp);
@@ -99,13 +98,13 @@ public class StoragePlanControllerTest {
     }
 
     @Test
-    public void deletesPlanByName() {
+    public void tellsDatabaseToDeletePlanByName() {
         StoragePlan sp = new StoragePlan("Juni", false, new StorageMetaData(100f), new ArrayList<PeriodicPlan>(), 1);
-        spc.select("Juni");
         try {
             when(spsMock.getByName("Juni")).thenReturn(sp);
         } catch (DataAccessException ignored) {
         }
+        spc.select("Juni");
         spc.delete();
 
         try {

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,6 +30,14 @@ public class PeriodicPlanControllerTest {
     @Mock private IProductStore psMock;
     @InjectMocks private PeriodicPlanController ppc;
 
+    PeriodicPlan pp;
+    PeriodicPlan ppLeft;
+    PeriodicPlan ppRight;
+
+    Product leftProduct = new Product(1, "Filur", null, 2);
+    Product product = new Product(1, "Isbåd", null, 1);
+    Product rightProduct = new Product(1, "Islagkage", null, 3);
+
     @Test
     public void setsProductAmountFrom50To40() {
         ppc.setProductAmount("Isbåd", 40);
@@ -37,47 +46,53 @@ public class PeriodicPlanControllerTest {
 
     @Test
     public void failsToSetProductAmountToNegativeValue() {
-        ppc.init(0);
         assertThrows(IllegalArgumentException.class, () -> ppc.setProductAmount("Isbåd", -2));
     }
 
     @Test
     public void failsToSetProductAmountToZero() {
-        ppc.init(0);
         assertThrows(IllegalArgumentException.class, () -> ppc.setProductAmount("Isbåd", 0));
     }
 
     @Test
     public void setsProductAmountFrom50To9999() {
-        ppc.init(0);
         ppc.setProductAmount("Isbåd", 9999);
         assertEquals(9999, ppc.getAmountByName("Isbåd"));
     }
 
     @Test
     public void savesPeriodicPlanToDatabase() {
-        ppc.init(0);
+        InOrder inOrder = inOrder(ppsMock);
+        ppc.save();
         try {
-            doThrow(new DataAccessException("Stuff", new Exception("more"))).when(ppsMock).update(isA(PeriodicPlan.class));
+            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(leftProduct)), eq(false));
+            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(product)));
+            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(rightProduct)), eq(false));
         } catch (DataAccessException ignored) {
         }
-        ppc.save();
     }
 
     @BeforeEach
     public void setup() {
+        HashMap<Product, Integer> productMapLeft = new HashMap<>();
         HashMap<Product, Integer> productMap = new HashMap<>();
-        PeriodicPlan pp;
-        productMap.put(new Product(1, "Isbåd", null, 1), 50);
-        pp = new PeriodicPlan(productMap,new Period(0, 1),new ArrayList<>());
+        HashMap<Product, Integer> productMapRight = new HashMap<>();
+        productMapLeft.put(leftProduct, 30);
+        productMap.put(product, 50);
+        productMapRight.put(rightProduct, 20);
+        pp = new PeriodicPlan(productMap, new Period(1, 2),new ArrayList<>());
+        ppLeft = new PeriodicPlan(productMapLeft, new Period(0, 1), new ArrayList<>());
+        ppRight = new PeriodicPlan(productMapRight, new Period(2, 3), new ArrayList<>());
         ArrayList<PeriodicPlan> ppList = new ArrayList<>();
+        ppList.add(ppLeft);
         ppList.add(pp);
+        ppList.add(ppRight);
         when(spcMock.get()).thenReturn(new StoragePlan("Juni",true,new StorageMetaData(10f), ppList));
         try {
-            when(ppsMock.getByStoragePlan(any())).thenReturn(new ArrayList<>(Arrays.asList(pp)));
+            when(ppsMock.getByStoragePlan(any())).thenReturn(ppList);
         } catch (DataAccessException ignored) {
         }
-        ppc.init(0);
+        ppc.init(1);
     }
 
     @AfterEach
