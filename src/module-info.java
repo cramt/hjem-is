@@ -17,4 +17,5 @@ module hjem {
 	requires org.mockito;
 	requires poi;
 	requires poi.ooxml;
+    requires kotlin.stdlib;
 }

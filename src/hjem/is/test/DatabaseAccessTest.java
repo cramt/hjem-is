@@ -34,6 +34,6 @@ public class DatabaseAccessTest {
         while (results.next()) {
             got.add(results.getString(1));
         }
-        assertArrayEquals(new String[]{"storage_plans", "storage_meta_data", "periodic_plans", "suppliers", "storage_orders", "products", "product_lines", "products_supplier", "periodic_plans_products_map", "sysdiagrams"}, got.toArray());
+        assertArrayEquals(new String[]{"storage_meta_data", "storage_plans", "periodic_plans", "sysdiagrams", "suppliers", "products", "storage_orders", "order_product_lines", "plan_lines"}, got.toArray());
     }
 }
