@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class PeriodicPlanUITwo extends MyFrame {
+public class PeriodicPlanUITwo extends JDialog {
     private PeriodicPlanController controller;
     private Map<String, Integer> productMap;
     private JPanel contentPane;
@@ -27,10 +27,11 @@ public class PeriodicPlanUITwo extends MyFrame {
     public PeriodicPlanUITwo(PeriodicPlanController controller) {
         this.controller = controller;
         productMap = new HashMap<>();
+        this.setModal(false);
 
         //make panel
         contentPane = new JPanel();
-        setBounds(100, 100, 504, 590);
+        setBounds(120, 120, 504, 590);
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
@@ -226,7 +227,7 @@ public class PeriodicPlanUITwo extends MyFrame {
         });
         
         save.addActionListener(e -> {
-        	//update 
+        	//update information
             Integer start = Parse.integer32(startPeriod.getText());
             Integer end = Parse.integer32(endPeriod.getText());
             Map<String, Integer> parsedProducts = productMap;
@@ -255,6 +256,7 @@ public class PeriodicPlanUITwo extends MyFrame {
             }
             controller.save();
             JOptionPane.showMessageDialog(null, "Perioden er gemt.");
+            
             this.dispose();
         });
         setTitle("Periodeplan for " + (controller.getStartPeriod() + 1) + "-" + controller.getEndPeriod());

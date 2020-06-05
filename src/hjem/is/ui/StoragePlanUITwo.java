@@ -8,19 +8,27 @@ import java.awt.Font;
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Dialog;
 
-public class StoragePlanUITwo extends MyFrame {
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.GridLayout;
+
+public class StoragePlanUITwo extends JDialog {
 	private JPanel contentPane;
 	private StoragePlanController controller;
 	private JTextField nameField;
+	private List<Period> periods;
 
 	public StoragePlanUITwo(StoragePlanController controller) {
         this.controller = controller;
-        List<Period> periods = controller.getPeriods();
+        periods = controller.getPeriods();
+        this.setModal(false);
         
         //Create main window
         //setDefaultCloseOperation()
-		setBounds(100, 100, 1000, 700);
+		setBounds(110, 110, 1000, 700);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -31,33 +39,22 @@ public class StoragePlanUITwo extends MyFrame {
 		contentPane.add(periodicPlanFullPanel);
 		periodicPlanFullPanel.setLayout(null);
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-		//create Period buttons
-		for (int i = 0; i < periods.size(); i++) {
-            Period period = periods.get(i);
-            JButton button = new JButton("Periode: " + (period.getStart() + 1) + " - " + period.getEnd());
-            
-            button.setPreferredSize(new Dimension(250, 40));
-            button.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
-            panel.add(button);
-            final int finalI = i;
-            button.addActionListener(e -> {
-            	//new PeriodicPlanUI(controller.getPeriodicPlanController(finalI));
-                new PeriodicPlanUITwo(controller.getPeriodicPlanController(finalI));
-            });
-        }
-
-		JPanel buttonPanelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		JPanel buttonPanelContainer = new JPanel();
 		buttonPanelContainer.setBounds(20, 21, 900, 60);
-		buttonPanelContainer.add(panel);
+		buttonPanelContainer.setLayout(null);
+	    
+		//create Period buttons
+		int buttonCount = createPeriodButtons(periods, buttonPanelContainer);
+		
+		//Update size of the panel so scrolling works
+		buttonPanelContainer.setPreferredSize(new Dimension(520, getPeriodPanelSize(buttonCount)));
 
 		//Scroll pane
 		JScrollPane scrollPane = new JScrollPane(buttonPanelContainer);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(0, 37, 520, 602);
 		periodicPlanFullPanel.add(scrollPane);
-		//getContentPane().add(scrollPane);
 		
 		JLabel periodPlansLabel = new JLabel("Periode planer for " + controller.getName() + ":");
 		periodPlansLabel.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
@@ -90,16 +87,17 @@ public class StoragePlanUITwo extends MyFrame {
 		save.addActionListener(e -> {
             controller.setName(nameField.getText());
             controller.save();
-            close();
+            JOptionPane.showMessageDialog(null, "Lagerplan gemt.");
+            setEnabled(false);
         });
 
 		JButton delete = new JButton("Slet");
 		delete.setBounds(219, 90, 117, 35);
 		delete.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
 		delete.addActionListener(e -> {
-			
 			controller.delete();
-			close();
+			JOptionPane.showMessageDialog(null, "Lagerplan slettet.");
+			setEnabled(false);
 		});
 		savePanel.add(delete);
 
@@ -117,20 +115,43 @@ public class StoragePlanUITwo extends MyFrame {
 
 		setTitle("Periodeplaner");
 		repaint();
-
-		//make sure the StoragePlanListUI is updated when this window is closed
-		/*addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        if (JOptionPane.showConfirmDialog(frame,
-		            "Are you sure you want to close this window?", "Close Window?",
-		            JOptionPane.YES_NO_OPTION,
-		            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-		            System.exit(0);
-		        }
-		    }
-		});
-		*/
         setVisible(true);
+	}
+	
+	public int getButtonYPlacement(int i) {
+		//return Y coordinate depending on button numbers
+		//Every new button must be 45 pixels below the one before
+		return i * 45;
+	}
+	
+	public int getPeriodPanelSize(int buttonAmount) {
+		//The first button start with a 10 pixel offset in Y coordinate
+		//Each new button is 45 pixels below the other.
+		//Each button has a height of 38 pixels
+		//We'll add 10 pixels at the bottom for neatness
+		//This means the total panel size would be:
+		//10 + (buttonAmount * 45) + 38 + 10
+		return (10 + (getButtonYPlacement(buttonAmount)) + 38 + 10);
+	}
+	
+	public int createPeriodButtons(List<Period> periods, JPanel container) {
+		int buttonCount = 0;
+		if (container.getComponentCount() > 0) {
+			container.removeAll();
+		}
+		for (int i = 0; i < periods.size(); i++) {
+	        Period period = periods.get(i);
+            JButton button = new JButton("Periode: " + (period.getStart() + 1) + " - " + period.getEnd());
+            button.setBounds(10, 10 + getButtonYPlacement(i), 480, 38);
+            button.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
+            container.add(button);
+            final int finalI = i;
+            buttonCount = i;
+            button.addActionListener(e -> {
+            	//new PeriodicPlanUI(controller.getPeriodicPlanController(finalI));
+                new PeriodicPlanUITwo(controller.getPeriodicPlanController(finalI));
+            });
+        }
+		return buttonCount;
 	}
 }

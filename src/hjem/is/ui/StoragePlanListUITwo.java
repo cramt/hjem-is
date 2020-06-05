@@ -124,5 +124,4 @@ public class StoragePlanListUITwo extends MyFrame {
         button.setSize(200, 40);
         return button;
 	}
-
 }
