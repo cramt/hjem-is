@@ -38,7 +38,9 @@ public class StoragePlanUITwo extends MyFrame {
 		for (int i = 0; i < periods.size(); i++) {
             Period period = periods.get(i);
             JButton button = new JButton("Periode: " + (period.getStart() + 1) + " - " + period.getEnd());
-            button.setPreferredSize(new Dimension(200, 40));
+            
+            button.setPreferredSize(new Dimension(250, 40));
+            button.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
             panel.add(button);
             final int finalI = i;
             button.addActionListener(e -> {

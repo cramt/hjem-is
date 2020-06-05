@@ -6,12 +6,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class StoragePlanListUITwo extends MyFrame {
 
 	private JPanel contentPane;
 	StoragePlanController controller;
-
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
 
 	/**
 	 * Create the frame.
@@ -58,8 +60,7 @@ public class StoragePlanListUITwo extends MyFrame {
 		generateNew.setBounds(597, 11, 278, 32);
 		fullPlansPanel.add(generateNew);
 		generateNew.addActionListener(e -> {
-            controller.generateNew("navn");
-            System.out.println("Controller Storageplan name: " + controller.getName());
+            controller.generateNew("Lagerplan " + formatter.format(java.time.LocalDate.now()));
             //new StoragePlanUI(controller);
             new StoragePlanUITwo(controller);
         });
@@ -77,7 +78,6 @@ public class StoragePlanListUITwo extends MyFrame {
 	            repaint();
 			});
 			savedPlan.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
- 			savedPlan.setSize(200, 40);
     		scrollPlansPanel.add(savedPlan);
 		}
 

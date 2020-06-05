@@ -124,18 +124,24 @@ public class PeriodicPlanController {
 
     public void setStartPeriod(int startPeriod) {
         current.getPeriod().setStart(startPeriod);
+        //This doesn't work
+        /*
         while (left.getPeriod().getStart() < startPeriod) {
             deleteLeft();
         }
         left.getPeriod().setEnd(startPeriod);
+        */
     }
 
     public void setEndPeriod(int endPeriod) {
         current.getPeriod().setEnd(endPeriod);
+        //This doesn't work
+        /*
         while (right.getPeriod().getEnd() > endPeriod) {
             deleteRight();
         }
         right.getPeriod().setStart(endPeriod);
+        */
     }
 
     private Product getByName(String name) {
@@ -238,5 +244,9 @@ public class PeriodicPlanController {
 
     public List<String> getUnusedNames() {
         return products.stream().filter(x -> !current.getProductMap().containsKey(x)).map(Product::getName).collect(Collectors.toList());
+    }
+    
+    public List<Product> getProducts() {
+    	return products;
     }
 }
