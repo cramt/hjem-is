@@ -24,11 +24,15 @@ public class PeriodicPlanUITwo extends JDialog {
     private JTextField amountField;
     private String[] array;
     
-    public PeriodicPlanUITwo(PeriodicPlanController controller) {
+    public PeriodicPlanUITwo(PeriodicPlanController controller, Dialog owner) {
+    	
+    	super(owner); //sets the owner of this window, so we can update data on the "owner" window
         this.controller = controller;
         productMap = new HashMap<>();
         this.setModal(false);
 
+        System.out.println("Owner of PeriodicPlanUITwo JDialog: " + getOwner());
+        
         //make panel
         contentPane = new JPanel();
         setBounds(120, 120, 504, 590);

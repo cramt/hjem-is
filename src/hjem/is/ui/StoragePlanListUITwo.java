@@ -62,7 +62,7 @@ public class StoragePlanListUITwo extends MyFrame {
 		generateNew.addActionListener(e -> {
             controller.generateNew("Lagerplan " + formatter.format(java.time.LocalDate.now()));
             //new StoragePlanUI(controller);
-            new StoragePlanUITwo(controller);
+            new StoragePlanUITwo(controller, this);
         });
 
 		//generate buttons for each already saved StoragePlan
@@ -71,7 +71,7 @@ public class StoragePlanListUITwo extends MyFrame {
 			JButton savedPlan = new JButton(name);
 			savedPlan.addActionListener(e -> {
 				controller.select(savedPlan.getText());
-				new StoragePlanUITwo(controller);
+				new StoragePlanUITwo(controller, this);
 			});
 			SwingUtilities.invokeLater(() -> {
 	            validate();
@@ -106,7 +106,7 @@ public class StoragePlanListUITwo extends MyFrame {
 			JButton savedPlan = new JButton(name);
 			savedPlan.addActionListener(e -> {
 				controller.select(savedPlan.getText());
-				new StoragePlanUITwo(controller);
+				new StoragePlanUITwo(controller, this);
 			});
 			SwingUtilities.invokeLater(() -> {
 	            validate();

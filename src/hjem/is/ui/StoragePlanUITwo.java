@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
+import java.awt.Frame;
 
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -20,11 +21,14 @@ public class StoragePlanUITwo extends JDialog {
 	private StoragePlanController controller;
 	private JTextField nameField;
 	private List<Period> periods;
-
-	public StoragePlanUITwo(StoragePlanController controller) {
-        this.controller = controller;
+	
+	public StoragePlanUITwo(StoragePlanController controller, Frame owner) {
+		super(owner); //sets the owner of this window, so we can update data on the "owner" window
+		this.controller = controller;
         periods = controller.getPeriods();
         this.setModal(false);
+        
+        System.out.println("Owner of StoragePlanUITwo JDialog: " + getOwner());
         
         //Create main window
         //setDefaultCloseOperation()
@@ -149,7 +153,7 @@ public class StoragePlanUITwo extends JDialog {
             buttonCount = i;
             button.addActionListener(e -> {
             	//new PeriodicPlanUI(controller.getPeriodicPlanController(finalI));
-                new PeriodicPlanUITwo(controller.getPeriodicPlanController(finalI));
+                new PeriodicPlanUITwo(controller.getPeriodicPlanController(finalI), this);
             });
         }
 		return buttonCount;
