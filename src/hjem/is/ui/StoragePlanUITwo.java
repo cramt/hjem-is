@@ -28,8 +28,6 @@ public class StoragePlanUITwo extends JDialog {
         periods = controller.getPeriods();
         this.setModal(false);
         
-        System.out.println("Owner of StoragePlanUITwo JDialog: " + getOwner());
-        
         //Create main window
         //setDefaultCloseOperation()
 		setBounds(110, 110, 1000, 700);
@@ -92,7 +90,7 @@ public class StoragePlanUITwo extends JDialog {
             controller.setName(nameField.getText());
             controller.save();
             JOptionPane.showMessageDialog(null, "Lagerplan gemt.");
-            setEnabled(false);
+            this.dispose();
         });
 
 		JButton delete = new JButton("Slet");
@@ -101,7 +99,7 @@ public class StoragePlanUITwo extends JDialog {
 		delete.addActionListener(e -> {
 			controller.delete();
 			JOptionPane.showMessageDialog(null, "Lagerplan slettet.");
-			setEnabled(false);
+			this.dispose();
 		});
 		savePanel.add(delete);
 

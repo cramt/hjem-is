@@ -25,13 +25,10 @@ public class PeriodicPlanUITwo extends JDialog {
     private String[] array;
     
     public PeriodicPlanUITwo(PeriodicPlanController controller, Dialog owner) {
-    	
     	super(owner); //sets the owner of this window, so we can update data on the "owner" window
         this.controller = controller;
         productMap = new HashMap<>();
         this.setModal(false);
-
-        System.out.println("Owner of PeriodicPlanUITwo JDialog: " + getOwner());
         
         //make panel
         contentPane = new JPanel();
@@ -81,7 +78,6 @@ public class PeriodicPlanUITwo extends JDialog {
         	Integer productAmount = controller.getAmountByName(productName);
         	productMap.put(productName, productAmount);
         	String[] productData = {productName, Integer.toString(productAmount)};
-        	
         	model.addRow(productData);
         }
         
