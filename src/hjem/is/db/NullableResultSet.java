@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class NullableResultSet {
-    private ResultSet set;
+    private final ResultSet set;
 
     public NullableResultSet(ResultSet set) {
         this.set = set;

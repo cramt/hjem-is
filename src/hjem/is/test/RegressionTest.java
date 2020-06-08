@@ -24,7 +24,7 @@ public class RegressionTest {
         List<List<Double>> data = new ArrayList<>();
         while ((row = csvReader.readLine()) != null) {
             String[] str = row.split(",");
-            data.add(Arrays.stream(str).map(Parse::integer64).collect(Collectors.toList()));
+            data.add(Arrays.stream(str).map(Parse::float64).collect(Collectors.toList()));
         }
         Observation[] observations = new Observation[data.size()];
         for (int i = 0; i < data.size(); i++) {
