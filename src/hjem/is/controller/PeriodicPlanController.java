@@ -35,10 +35,15 @@ public class PeriodicPlanController {
 
     public void init(int index) {
         Thread plansThread = new Thread(() -> {
-            try {
-                plans = store.getByStoragePlan(spc.get());
-            } catch (DataAccessException ignored) {
+            if(spc.get().getPeriodicPlans() == null) {
+                try {
+                    plans = store.getByStoragePlan(spc.get());
+                } catch (DataAccessException ignored) {
 
+                }
+            }
+            else{
+                plans = spc.get().getPeriodicPlans();
             }
         });
         Thread productThread = new Thread(() -> {
@@ -245,7 +250,7 @@ public class PeriodicPlanController {
     public List<String> getUnusedNames() {
         return products.stream().filter(x -> !current.getProductMap().containsKey(x)).map(Product::getName).collect(Collectors.toList());
     }
-    
+
     public List<Product> getProducts() {
     	return products;
     }

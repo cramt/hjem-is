@@ -2,10 +2,14 @@ package hjem.is.test;
 
 import hjem.is.controller.PeriodicPlanController;
 import hjem.is.controller.StoragePlanController;
-import hjem.is.db.*;
-import hjem.is.model.*;
+import hjem.is.db.DataAccessException;
+import hjem.is.db.IPeriodicPlanStore;
+import hjem.is.db.IProductStore;
+import hjem.is.model.PeriodicPlan;
+import hjem.is.model.Product;
+import hjem.is.model.StorageMetaData;
+import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
-import org.apache.poi.hpsf.Array;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PeriodicPlanControllerTest {
@@ -41,7 +45,7 @@ public class PeriodicPlanControllerTest {
     @Test
     public void setsProductAmountFrom50To40() {
         ppc.setProductAmount("Isbåd", 40);
-        assertEquals(40, ppc.getAmountByName("Isbåd"));
+        assertEquals(40, (int)ppc.getAmountByName("Isbåd"));
     }
 
     @Test
@@ -57,7 +61,7 @@ public class PeriodicPlanControllerTest {
     @Test
     public void setsProductAmountFrom50To9999() {
         ppc.setProductAmount("Isbåd", 9999);
-        assertEquals(9999, ppc.getAmountByName("Isbåd"));
+        assertEquals(9999, (int)ppc.getAmountByName("Isbåd"));
     }
 
     @Test
