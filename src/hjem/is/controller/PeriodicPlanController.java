@@ -166,16 +166,14 @@ public class PeriodicPlanController {
 
 
     public void setProductAmount(String name, int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Product amount cannot be less than or equal to zero");
+        }
         Product product = getByName(name);
         if (product == null) {
             return;
         }
-
-        if (amount == 0) {
-            current.getProductMap().remove(product);
-        } else {
-            current.getProductMap().put(product, amount);
-        }
+        current.getProductMap().put(product, amount);
     }
 
     public boolean addProduct(String name) {

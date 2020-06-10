@@ -69,9 +69,15 @@ public class PeriodicPlanControllerTest {
         InOrder inOrder = inOrder(ppsMock);
         ppc.save();
         try {
-            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(leftProduct)), eq(false));
-            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(product)));
-            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) -> ppArg.getProductMap().containsKey(rightProduct)), eq(false));
+            inOrder.verify(ppsMock).update(
+                    argThat((PeriodicPlan ppArg) ->
+                            ppArg.getProductMap().containsKey(leftProduct)),
+                    eq(false));
+            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) ->
+                    ppArg.getProductMap().containsKey(product)));
+            inOrder.verify(ppsMock).update(argThat((PeriodicPlan ppArg) ->
+                    ppArg.getProductMap().containsKey(rightProduct)),
+                    eq(false));
         } catch (DataAccessException ignored) {
         }
     }
@@ -93,7 +99,8 @@ public class PeriodicPlanControllerTest {
         ppList.add(ppRight);
         when(spcMock.get()).thenReturn(new StoragePlan("Juni",true,new StorageMetaData(10f), ppList));
         try {
-            when(ppsMock.getByStoragePlan(any())).thenReturn(ppList);
+            when(ppsMock.getByStoragePlan(any()))
+                    .thenReturn(ppList);
         } catch (DataAccessException ignored) {
         }
         ppc.init(1);
