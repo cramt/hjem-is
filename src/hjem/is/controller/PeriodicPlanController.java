@@ -35,14 +35,13 @@ public class PeriodicPlanController {
 
     public void init(int index) {
         Thread plansThread = new Thread(() -> {
-            if(spc.get().getPeriodicPlans() == null) {
+            if (spc.get().getPeriodicPlans() == null) {
                 try {
                     plans = store.getByStoragePlan(spc.get());
                 } catch (DataAccessException ignored) {
 
                 }
-            }
-            else{
+            } else {
                 plans = spc.get().getPeriodicPlans();
             }
         });
@@ -63,7 +62,7 @@ public class PeriodicPlanController {
         }
 
         current = plans.get(index);
-        if(current.getId() != null){
+        if (current.getId() != null) {
             try {
                 new ProductSqlStore().getProductsByPeriodicPlan(current);
             } catch (DataAccessException ignored) {
@@ -194,6 +193,9 @@ public class PeriodicPlanController {
     }
 
     public void save() {
+        if (spc.get().getId() == null) {
+            return;
+        }
         Thread deleteThread = new Thread(() -> {
             try {
                 store.delete(toDelete);
@@ -257,6 +259,6 @@ public class PeriodicPlanController {
     }
 
     public List<Product> getProducts() {
-    	return products;
+        return products;
     }
 }
