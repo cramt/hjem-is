@@ -110,19 +110,22 @@ public class StoragePlanController {
         }
     }
 
-    public void save() {
-        for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+    public boolean save() {
+        boolean isNew = false;
+    	for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
             onSaveListener.accept(current);
         }
         try {
             if (current.getId() == null) {
                 store.add(current);
+                isNew = true;
             } else {
                 store.update(current);
             }
         } catch (DataAccessException ignored) {
 
         }
+        return isNew;
     }
 
     public void addOnSaveListener(Consumer<StoragePlan> consumer) {

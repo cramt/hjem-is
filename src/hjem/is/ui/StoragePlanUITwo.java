@@ -19,11 +19,13 @@ import java.awt.GridLayout;
 public class StoragePlanUITwo extends JDialog {
 	private JPanel contentPane;
 	private StoragePlanController controller;
+	private StoragePlanListUITwo parentUI;
 	private JTextField nameField;
+	private JPanel buttonPanelContainer = new JPanel();
 	private List<Period> periods;
 	
-	public StoragePlanUITwo(StoragePlanController controller, Frame owner) {
-		super(owner); //sets the owner of this window, so we can update data on the "owner" window
+	public StoragePlanUITwo(StoragePlanController controller, StoragePlanListUITwo parentUI) {
+		this.parentUI = parentUI;
 		this.controller = controller;
         periods = controller.getPeriods();
         this.setModal(false);
@@ -41,7 +43,6 @@ public class StoragePlanUITwo extends JDialog {
 		contentPane.add(periodicPlanFullPanel);
 		periodicPlanFullPanel.setLayout(null);
 
-		JPanel buttonPanelContainer = new JPanel();
 		buttonPanelContainer.setBounds(20, 21, 900, 60);
 		buttonPanelContainer.setLayout(null);
 	    
@@ -89,6 +90,7 @@ public class StoragePlanUITwo extends JDialog {
 		save.addActionListener(e -> {
             controller.setName(nameField.getText());
             controller.save();
+            parentUI.paintPlans();
             JOptionPane.showMessageDialog(null, "Lagerplan gemt.");
             this.dispose();
         });
@@ -98,6 +100,7 @@ public class StoragePlanUITwo extends JDialog {
 		delete.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
 		delete.addActionListener(e -> {
 			controller.delete();
+			parentUI.paintPlans();
 			JOptionPane.showMessageDialog(null, "Lagerplan slettet.");
 			this.dispose();
 		});
@@ -136,6 +139,9 @@ public class StoragePlanUITwo extends JDialog {
 		return (10 + (getButtonYPlacement(buttonAmount)) + 38 + 10);
 	}
 	
+	public void createButtons() {
+		createPeriodButtons(periods, buttonPanelContainer);
+	}
 	public int createPeriodButtons(List<Period> periods, JPanel container) {
 		int buttonCount = 0;
 		if (container.getComponentCount() > 0) {

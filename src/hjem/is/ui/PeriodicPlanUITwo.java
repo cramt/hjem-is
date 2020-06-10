@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class PeriodicPlanUITwo extends JDialog {
     private PeriodicPlanController controller;
     private Map<String, Integer> productMap;
+    private StoragePlanUITwo parentUI;
     private JPanel contentPane;
     private JTable products;
     private JScrollPane scrollPane;
@@ -24,11 +25,12 @@ public class PeriodicPlanUITwo extends JDialog {
     private JTextField amountField;
     private String[] array;
     
-    public PeriodicPlanUITwo(PeriodicPlanController controller, Dialog owner) {
-    	super(owner); //sets the owner of this window, so we can update data on the "owner" window
+    public PeriodicPlanUITwo(PeriodicPlanController controller, StoragePlanUITwo parentUI) {
+    	this.parentUI = parentUI;
         this.controller = controller;
         productMap = new HashMap<>();
-        this.setModal(false);
+        this.setModal(true);
+        
         
         //make panel
         contentPane = new JPanel();
@@ -56,11 +58,7 @@ public class PeriodicPlanUITwo extends JDialog {
         ) {
         	@Override
         	public boolean isCellEditable(int row, int column) {
-        		boolean res = true;
-        		if (column == 0) {
-        			res = false;;
-        		}
-        		return res;
+        		return false;
         	}
         };
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -231,10 +229,6 @@ public class PeriodicPlanUITwo extends JDialog {
             Integer start = Parse.integer32(startPeriod.getText());
             Integer end = Parse.integer32(endPeriod.getText());
             Map<String, Integer> parsedProducts = productMap;
-            //.entrySet().stream().collect(Collectors.toMap(
-            //      Map.Entry::getKey,
-            //      v -> Parse.integer32(v.getValue().getText())
-            //));
             if (start == null) {
                 showError("your start period cannot be parsed");
                 return;
@@ -255,8 +249,8 @@ public class PeriodicPlanUITwo extends JDialog {
                 controller.setProductAmount(stringIntegerEntry.getKey(), stringIntegerEntry.getValue());
             }
             controller.save();
+            parentUI.createButtons();
             JOptionPane.showMessageDialog(null, "Perioden er gemt.");
-            
             this.dispose();
         });
         setTitle("Periodeplan for " + (controller.getStartPeriod() + 1) + "-" + controller.getEndPeriod());

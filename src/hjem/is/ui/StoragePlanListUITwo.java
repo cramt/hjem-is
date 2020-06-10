@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class StoragePlanListUITwo extends MyFrame {
 
 	private JPanel contentPane;
+	private JPanel scrollPlansPanel = new JPanel();
 	StoragePlanController controller;
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
 
@@ -50,8 +51,7 @@ public class StoragePlanListUITwo extends MyFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 54, 482, 509);
 		storagePlansPanel.add(scrollPane);
-
-		JPanel scrollPlansPanel = new JPanel();
+		
 		scrollPane.setViewportView(scrollPlansPanel);
 		scrollPlansPanel.setLayout(new BoxLayout(scrollPlansPanel, BoxLayout.Y_AXIS));
 
@@ -101,7 +101,13 @@ public class StoragePlanListUITwo extends MyFrame {
 		setVisible(true);
 	}
 
+	public void paintPlans() {
+		paintStoragePlans(controller, scrollPlansPanel);
+	}
 	public void paintStoragePlans(StoragePlanController controller, JPanel panel) {
+		if(panel.getComponentCount() > 0) {
+			panel.removeAll();
+		}
 		for (String name : controller.getNames()) {
 			JButton savedPlan = new JButton(name);
 			savedPlan.addActionListener(e -> {
