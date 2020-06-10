@@ -63,6 +63,13 @@ public class PeriodicPlanController {
         }
 
         current = plans.get(index);
+        if(current.getId() != null){
+            try {
+                new ProductSqlStore().getProductsByPeriodicPlan(current);
+            } catch (DataAccessException ignored) {
+
+            }
+        }
         int leftIndex = index - 1;
         int rightIndex = index + 1;
         if (leftIndex < 0) {

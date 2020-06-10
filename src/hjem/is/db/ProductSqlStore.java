@@ -1,13 +1,12 @@
 package hjem.is.db;
 
+import hjem.is.model.PeriodicPlan;
 import hjem.is.model.Product;
 import hjem.is.model.Supplier;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProductSqlStore implements IProductStore {
@@ -71,4 +70,24 @@ public class ProductSqlStore implements IProductStore {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Product> getProductsByPeriodicPlan(PeriodicPlan plan) throws DataAccessException {
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT amount, name, product_id, cost, supplier_id FROM plan_lines INNER JOIN products ON plan_lines.product_id = products.id WHERE periodic_plan_id = ?");
+            stmt.setInt(1, plan.getId());
+            NullableResultSet result = new NullableResultSet(stmt.executeQuery());
+            Map<Product, Integer> products = new HashMap<>();
+            while (result.next()){
+                products.put(new Product(result.getInt("cost"), result.getString("name"), null, result.getInt("product_id")), result.getInt("amount"));
+            }
+            plan.setProductMap(products);
+            return new ArrayList<>(products.keySet());
+
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+
 }
