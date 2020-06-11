@@ -1,6 +1,8 @@
 package hjem.is.ui;
 
 import hjem.is.controller.PeriodicPlanController;
+import hjem.is.controller.StorageOrderController;
+import hjem.is.model.StorageOrder;
 import hjem.is.utilities.Parse;
 
 import javax.swing.*;
@@ -17,6 +19,7 @@ public class PeriodicPlanUITwo extends JDialog {
     private PeriodicPlanController controller;
     private Map<String, Integer> productMap;
     private StoragePlanUITwo parentUI;
+    private StorageOrderController sOController;
     private JPanel contentPane;
     private JTable products;
     private JScrollPane scrollPane;
@@ -24,13 +27,14 @@ public class PeriodicPlanUITwo extends JDialog {
     private JTextField endPeriod;
     private JTextField amountField;
     private String[] array;
+    private JTable productsTable;
     
     public PeriodicPlanUITwo(PeriodicPlanController controller, StoragePlanUITwo parentUI) {
     	this.parentUI = parentUI;
         this.controller = controller;
         productMap = new HashMap<>();
+        sOController = new StorageOrderController();
         this.setModal(true);
-        
         
         //make panel
         contentPane = new JPanel();
@@ -46,6 +50,7 @@ public class PeriodicPlanUITwo extends JDialog {
         scrollPane = new JScrollPane();
         scrollPane.setBounds(10, 240, 464, 305);
         panel.add(scrollPane);
+        
         
         products = new JTable();
         products.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -253,6 +258,23 @@ public class PeriodicPlanUITwo extends JDialog {
             JOptionPane.showMessageDialog(null, "Perioden er gemt.");
             this.dispose();
         });
+        
+        JButton btnCreateOrder = new JButton("Bestil");
+        btnCreateOrder.setFont(new Font("Segoe UI Black", Font.PLAIN, 13));
+        btnCreateOrder.setBounds(343, 174, 131, 28);
+        panel.add(btnCreateOrder);
+        btnCreateOrder.addActionListener(e -> {
+        	//If table is empty, don't create an order
+        	if(model.getRowCount() > 0) {
+	        	//For each entry in productmap, create new storageOrder
+	        	List<StorageOrder> storageOrders = sOController.createOrders(controller.getCurrent());
+	        	JOptionPane.showMessageDialog(null, "Bestilling oprettet.");
+	        	showStorageOrders(storageOrders, controller, model);
+        	} else {
+        		JOptionPane.showMessageDialog(null, "Tilføj produkter så der kan oprettes en bestilling.");
+        	}
+        });
+        
         setTitle("Periodeplan for " + (controller.getStartPeriod() + 1) + "-" + controller.getEndPeriod());
         setVisible(true);
     }
@@ -260,5 +282,124 @@ public class PeriodicPlanUITwo extends JDialog {
     private void showError(String message) {
         JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
                 JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void showStorageOrder(StorageOrder storageOrder, PeriodicPlanController controller, DefaultTableModel model) {
+    	//create a GUI representation of the StorageOrder
+    	JDialog storageOrderUI = new JDialog();
+    	JPanel container = new JPanel();
+    	setBounds(120, 120, 504, 590);
+        setContentPane(container);
+        container.setLayout(null);
+        
+        JLabel lblHjemis = new JLabel("Hjem-IS");
+        lblHjemis.setFont(new Font("Segoe UI Black", Font.PLAIN, 18));
+        lblHjemis.setHorizontalAlignment(SwingConstants.CENTER);
+        lblHjemis.setBounds(10, 0, 468, 33);
+        container.add(lblHjemis);
+        
+        JLabel lblAalborgDepot = new JLabel("Aalborg depot");
+        lblAalborgDepot.setHorizontalAlignment(SwingConstants.CENTER);
+        lblAalborgDepot.setFont(new Font("Segoe UI Black", Font.PLAIN, 16));
+        lblAalborgDepot.setBounds(10, 31, 468, 23);
+        container.add(lblAalborgDepot);
+        
+        JLabel lblTarmvej = new JLabel("Tarmvej 6, 9220 Aalborg");
+        lblTarmvej.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblTarmvej.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTarmvej.setBounds(10, 59, 468, 23);
+        container.add(lblTarmvej);
+        
+        //Create the table which shows products, amounts and price
+        productsTable = new JTable();
+        productsTable.setFont(new Font("Consolas", Font.PLAIN, 14));
+        productsTable.setShowVerticalLines(false);
+        productsTable.setShowHorizontalLines(false);
+        productsTable.setShowGrid(false);
+        productsTable.setRowSelectionAllowed(false);
+        productsTable.setEnabled(false);
+        productsTable.setBounds(10, 113, 468, 317);
+        DefaultTableModel tableModel = new DefaultTableModel(
+           	new Object[][][][] {
+           	},
+           	new String[] {
+           		"Produkt", "Antal", "Stk. Pris", "Pris"
+           	}
+        ) {
+           	@Override
+           	public boolean isCellEditable(int row, int column) {
+           		return false;
+           	}
+        };
+        productsTable.setModel(tableModel);
+        productsTable.setRowHeight(25);
+        container.add(productsTable);
+        
+        //add each product name, amount, price, and total price to tableModel
+        int subTotal = 0;
+        int productCost;
+        int productAmount;
+        String productName;
+        for(int i = 0; i < model.getRowCount(); i++) {
+        	productName = model.getValueAt(i, 0).toString();
+        	productAmount = controller.getAmountByName(productName);
+        	productCost = controller.getCostByName(productName);
+        	String[] tableData = {productName, "" + productAmount, "" + productCost, "" + productAmount * productCost};
+        	tableModel.addRow(tableData);
+        	subTotal += Integer.parseInt(tableData[3]);
+        }
+        double moms = subTotal * 0.25;
+        double totalDKK = subTotal + moms;
+        
+        JPanel totalPricePanel = new JPanel();
+        totalPricePanel.setBounds(208, 441, 270, 99);
+        container.add(totalPricePanel);
+        totalPricePanel.setLayout(null);
+        
+        JLabel lblSubtotal = new JLabel("Subtotal");
+        lblSubtotal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblSubtotal.setBounds(10, 11, 105, 14);
+        totalPricePanel.add(lblSubtotal);
+        
+        JLabel lblMoms = new JLabel("Moms (25,00%)");
+        lblMoms.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblMoms.setBounds(10, 36, 105, 14);
+        totalPricePanel.add(lblMoms);
+        
+        JLabel lblTotalDkk = new JLabel("Total DKK");
+        lblTotalDkk.setFont(new Font("Tahoma", Font.BOLD, 13));
+        lblTotalDkk.setBounds(10, 61, 105, 14);
+        totalPricePanel.add(lblTotalDkk);
+        
+        JLabel lblTotalmoney = new JLabel("" + subTotal + ",00");
+        lblTotalmoney.setFont(new Font("Consolas", Font.PLAIN, 14));
+        lblTotalmoney.setHorizontalAlignment(SwingConstants.TRAILING);
+        lblTotalmoney.setBounds(171, 12, 89, 14);
+        totalPricePanel.add(lblTotalmoney);
+        
+        JLabel lblMomsmoney = new JLabel("" + String.format("%.2f", moms));
+        lblMomsmoney.setFont(new Font("Consolas", Font.PLAIN, 14));
+        lblMomsmoney.setHorizontalAlignment(SwingConstants.TRAILING);
+        lblMomsmoney.setBounds(171, 37, 89, 14);
+        totalPricePanel.add(lblMomsmoney);
+        
+        JLabel lblTotaldkkmoney = new JLabel("" + String.format("%.2f", totalDKK));
+        lblTotaldkkmoney.setHorizontalAlignment(SwingConstants.TRAILING);
+        lblTotaldkkmoney.setFont(new Font("Consolas", Font.BOLD, 14));
+        lblTotaldkkmoney.setBounds(171, 62, 89, 14);
+        totalPricePanel.add(lblTotaldkkmoney);
+        
+        JLabel lblProduktAntalStk = new JLabel("Produkt        Antal           Stk. Pris          Pris");
+        lblProduktAntalStk.setFont(new Font("Consolas", Font.PLAIN, 15));
+        lblProduktAntalStk.setBounds(10, 88, 468, 23);
+        container.add(lblProduktAntalStk);
+        
+        
+    }
+    
+    private void showStorageOrders(List<StorageOrder> storageOrders, PeriodicPlanController controller, DefaultTableModel model) {
+    	for (int i = 0; i < storageOrders.size(); i++) {
+    		showStorageOrder(storageOrders.get(i), controller, model);
+    	}
     }
 }

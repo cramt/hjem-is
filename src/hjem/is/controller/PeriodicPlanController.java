@@ -81,33 +81,7 @@ public class PeriodicPlanController {
         right = plans.get(rightIndex);
     }
 
-    //creates a new order for each new supplier, stacks those together with the same supplier
-    public List<StorageOrder> createOrders() {
-        Supplier supplier = null;
-        Supplier previous = null;
-        Map<Product, Integer> map;
-        ArrayList<OrderProductLine> orderProductLines = new ArrayList<>();
-        ArrayList<StorageOrder> orders = new ArrayList<>();
-
-        //for each product and amount, add that product and amount to ProductLine List on StorageOrder
-        for (Map.Entry<Product, Integer> entry : current.getProductMap().entrySet()) {
-            supplier = entry.getKey().getSupplier();
-            //if not new supplier, add productLine
-            if (previous == null || previous.equals(supplier)) {
-                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
-                previous = supplier;
-            } else {
-                //if new supplier, make storageOrder and run again
-                orders.add(new StorageOrder(null, null, previous, orderProductLines));
-                orderProductLines.clear();
-                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
-                previous = supplier;
-            }
-        }
-        orders.add(new StorageOrder(null, null, supplier, orderProductLines));
-
-        return orders;
-    }
+    
 
     private void deleteLeft() {
         int index = plans.indexOf(left);
@@ -260,5 +234,21 @@ public class PeriodicPlanController {
 
     public List<Product> getProducts() {
         return products;
+    }
+    
+    public PeriodicPlan getCurrent() {
+    	return current;
+    }
+    
+    public int getCostByName(String name) {
+    	int cost = 0;
+    	Product product;
+    	for (int i = 0; i < products.size(); i++) {
+    		product = products.get(i);
+    		if (product.getName().equalsIgnoreCase(name)) {
+    			cost = product.getCost();
+    		}
+    	}
+    	return cost;
     }
 }
