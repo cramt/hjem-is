@@ -1,6 +1,5 @@
 package hjem.is.controller.regression;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 // Represents a fitted multiple linear regression model.

@@ -1,3 +1,4 @@
+
 module hjem {
 	exports hjem.is.ui;
 	exports hjem.is.controller;
@@ -17,4 +18,6 @@ module hjem {
 	requires org.mockito;
 	requires poi;
 	requires poi.ooxml;
+    //requires kotlin.stdlib;
 }
+

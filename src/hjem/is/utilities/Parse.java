@@ -10,7 +10,7 @@ public class Parse {
         return null;
     }
 
-    public static Double integer64(String str){
+    public static Double float64(String str){
         try {
             return Double.parseDouble(str);
         } catch (NumberFormatException ignored) {

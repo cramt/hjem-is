@@ -29,6 +29,7 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             if (result.next()) {
                 StoragePlan storagePlan = new StoragePlan(name, result.getBool("active"), new StorageMetaData(result.getFloat("percent_inventory_cost"), result.getInt("md_id")), new ArrayList<>(), result.getInt("p_id"));
                 stmt = DBConnection.getInstance().getConnection().prepareStatement("SELECT id, start_period, end_period FROM periodic_plans WHERE storage_plan_id = ?");
+                stmt.setInt(1, storagePlan.getId());
                 result = new NullableResultSet(stmt.executeQuery());
                 while (result.next()) {
                     storagePlan.getPeriodicPlans().add(new PeriodicPlan(null, new Period(result.getInt("start_period"), result.getInt("end_period")), null, result.getInt("id")));
@@ -138,6 +139,20 @@ public class StoragePlanSqlStore implements IStoragePlanStore {
             stmt.setString(1, storagePlan.getName());
             stmt.setInt(2, storagePlan.isActive() ? 1 : 0);
             stmt.setInt(3, storagePlan.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void delete(StoragePlan storagePlan) throws DataAccessException {
+        if (storagePlan.getId() == null) {
+            throw new IllegalArgumentException("this object isnt in the database and cant be updated");
+        }
+        try {
+            PreparedStatement stmt = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM storage_plans WHERE id = ?");
+            stmt.setInt(1, storagePlan.getId());
             stmt.execute();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);

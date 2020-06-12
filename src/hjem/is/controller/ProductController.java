@@ -6,7 +6,7 @@ import hjem.is.model.Supplier;
 import hjem.is.db.ProductSqlStore;
 
 import java.util.List;
-//Should this class "create" a ProductSqlStore object? See DAO pattern example
+
 public class ProductController {
     private Product product;
     ProductSqlStore productSqlStore;
@@ -18,6 +18,7 @@ public class ProductController {
     void add(Product[] products) throws DataAccessException {
         productSqlStore.add(products);
     }
+
     void add(Product product) throws DataAccessException {
         productSqlStore.add(product);
     }

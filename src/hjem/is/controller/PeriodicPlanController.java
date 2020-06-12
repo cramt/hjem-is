@@ -1,17 +1,8 @@
 package hjem.is.controller;
 
 import hjem.is.db.*;
-import hjem.is.model.PeriodicPlan;
-import hjem.is.model.Product;
-import hjem.is.model.OrderProductLine;
-import hjem.is.model.Supplier;
-import hjem.is.model.time.Period;
-import hjem.is.model.StorageOrder;
-import org.apache.commons.math3.geometry.spherical.twod.Circle;
-import org.apache.poi.ss.formula.functions.T;
+import hjem.is.model.*;
 
-import javax.print.attribute.standard.ReferenceUriSchemesSupported;
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,27 +10,39 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PeriodicPlanController {
-    private final PeriodicPlan current;
+    private PeriodicPlan current;
     private PeriodicPlan left;
     private PeriodicPlan right;
-    private List<PeriodicPlan> toDelete;
-    private final IPeriodicPlanStore store;
+    private List<PeriodicPlan> toDelete = new ArrayList<>();
+    private IPeriodicPlanStore store;
     private List<PeriodicPlan> plans;
-    private final IProductStore productStore;
+    private IProductStore productStore;
     private List<Product> products;
+    private StoragePlanController spc;
+
+    public PeriodicPlanController() {
+        store = new PeriodicPlanSqlStore();
+        productStore = new ProductSqlStore();
+        spc = new StoragePlanController();
+    }
 
     public PeriodicPlanController(StoragePlanController controller, int index) {
         store = new PeriodicPlanSqlStore();
         productStore = new ProductSqlStore();
+        spc = controller;
+        init(index);
+    }
+
+    public void init(int index) {
         Thread plansThread = new Thread(() -> {
-            if (controller.get().getPeriodicPlans() != null) {
-                plans = controller.get().getPeriodicPlans();
-            } else {
+            if (spc.get().getPeriodicPlans() == null) {
                 try {
-                    plans = store.getByStoragePlan(controller.get());
+                    plans = store.getByStoragePlan(spc.get());
                 } catch (DataAccessException ignored) {
 
                 }
+            } else {
+                plans = spc.get().getPeriodicPlans();
             }
         });
         Thread productThread = new Thread(() -> {
@@ -48,11 +51,6 @@ public class PeriodicPlanController {
             } catch (DataAccessException ignored) {
 
             }
-            products = new ArrayList<>();
-            products.add(new Product(30, "isbåd", null));
-            products.add(new Product(20, "guldhorn", null));
-            products.add(new Product(10, "kong-fu", null));
-
         });
         plansThread.start();
         productThread.start();
@@ -64,6 +62,13 @@ public class PeriodicPlanController {
         }
 
         current = plans.get(index);
+        if (current.getId() != null) {
+            try {
+                new ProductSqlStore().getProductsByPeriodicPlan(current);
+            } catch (DataAccessException ignored) {
+
+            }
+        }
         int leftIndex = index - 1;
         int rightIndex = index + 1;
         if (leftIndex < 0) {
@@ -74,36 +79,9 @@ public class PeriodicPlanController {
         }
         left = plans.get(leftIndex);
         right = plans.get(rightIndex);
-
     }
 
-    //creates a new order for each new supplier, stacks those together with the same supplier
-    public List<StorageOrder> createOrders() {
-        Supplier supplier = null;
-        Supplier previous = null;
-        Map<Product, Integer> map;
-        ArrayList<OrderProductLine> orderProductLines = new ArrayList<>();
-        ArrayList<StorageOrder> orders = new ArrayList<>();
-
-        //for each product and amount, add that product and amount to ProductLine List on StorageOrder
-        for (Map.Entry<Product, Integer> entry : current.getProductMap().entrySet()) {
-            supplier = entry.getKey().getSupplier();
-            //if not new supplier, add productLine
-            if (previous == null || previous.equals(supplier)) {
-                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
-                previous = supplier;
-            } else {
-                //if new supplier, make storageOrder and run again
-                orders.add(new StorageOrder(null, null, previous, orderProductLines));
-                orderProductLines.clear();
-                orderProductLines.add(new OrderProductLine(entry.getKey(), entry.getValue()));
-                previous = supplier;
-            }
-        }
-        orders.add(new StorageOrder(null, null, supplier, orderProductLines));
-
-        return orders;
-    }
+    
 
     private void deleteLeft() {
         int index = plans.indexOf(left);
@@ -131,18 +109,24 @@ public class PeriodicPlanController {
 
     public void setStartPeriod(int startPeriod) {
         current.getPeriod().setStart(startPeriod);
+        //This doesn't work
+        /*
         while (left.getPeriod().getStart() < startPeriod) {
             deleteLeft();
         }
         left.getPeriod().setEnd(startPeriod);
+        */
     }
 
     public void setEndPeriod(int endPeriod) {
         current.getPeriod().setEnd(endPeriod);
+        //This doesn't work
+        /*
         while (right.getPeriod().getEnd() > endPeriod) {
             deleteRight();
         }
         right.getPeriod().setStart(endPeriod);
+        */
     }
 
     private Product getByName(String name) {
@@ -155,16 +139,14 @@ public class PeriodicPlanController {
 
 
     public void setProductAmount(String name, int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Product amount cannot be less than or equal to zero");
+        }
         Product product = getByName(name);
         if (product == null) {
             return;
         }
-
-        if (amount == 0) {
-            current.getProductMap().remove(product);
-        } else {
-            current.getProductMap().put(product, amount);
-        }
+        current.getProductMap().put(product, amount);
     }
 
     public boolean addProduct(String name) {
@@ -185,6 +167,9 @@ public class PeriodicPlanController {
     }
 
     public void save() {
+        if (spc.get().getId() == null) {
+            return;
+        }
         Thread deleteThread = new Thread(() -> {
             try {
                 store.delete(toDelete);
@@ -245,5 +230,25 @@ public class PeriodicPlanController {
 
     public List<String> getUnusedNames() {
         return products.stream().filter(x -> !current.getProductMap().containsKey(x)).map(Product::getName).collect(Collectors.toList());
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+    
+    public PeriodicPlan getCurrent() {
+    	return current;
+    }
+    
+    public int getCostByName(String name) {
+    	int cost = 0;
+    	Product product;
+    	for (int i = 0; i < products.size(); i++) {
+    		product = products.get(i);
+    		if (product.getName().equalsIgnoreCase(name)) {
+    			cost = product.getCost();
+    		}
+    	}
+    	return cost;
     }
 }

@@ -1,13 +1,11 @@
 package hjem.is.db;
 
-import org.apache.commons.math3.analysis.function.Sqrt;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class NullableResultSet {
-    private ResultSet set;
+    private final ResultSet set;
 
     public NullableResultSet(ResultSet set) {
         this.set = set;

@@ -7,9 +7,6 @@ import hjem.is.model.PeriodicPlan;
 import hjem.is.model.StoragePlan;
 import hjem.is.model.time.Period;
 
-import javax.print.attribute.standard.ReferenceUriSchemesSupported;
-import javax.swing.text.SimpleAttributeSet;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +16,8 @@ import java.util.stream.Collectors;
 public class StoragePlanController {
     private StoragePlan current;
     private IStoragePlanStore store;
-    private List<Consumer<StoragePlan>> onSaveListeners;
+    private List<Consumer<StoragePlan>> onSaveListeners = new ArrayList<>();
+    //private Consumer<StoragePlan> plans;
 
     public StoragePlanController() {
         store = new StoragePlanSqlStore();
@@ -53,7 +51,12 @@ public class StoragePlanController {
     }
 
     public List<Period> getPeriods() {
-        return current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
+        List<Period> periods = new ArrayList<>();
+        for (int i = 0; i < current.getPeriodicPlans().size(); i++) {
+            periods.add(current.getPeriodicPlans().get(i).getPeriod());
+        }
+        return periods;
+        //current.getPeriodicPlans().stream().map(PeriodicPlan::getPeriod).collect(Collectors.toList());
     }
 
     public PeriodicPlanController getPeriodicPlanController(int index) {
@@ -64,7 +67,7 @@ public class StoragePlanController {
         try {
             current = store.getByName(name);
         } catch (DataAccessException ignored) {
-
+            System.out.println(ignored);
         }
     }
 
@@ -95,7 +98,11 @@ public class StoragePlanController {
                 }).start();
             } else {
                 all.remove(active.get(0));
-                all.set(0, active.get(0));
+                if (all.size() == 0) {
+                    all.add(active.get(0));
+                } else {
+                    all.set(0, active.get(0));
+                }
             }
             return all.stream().map(StoragePlan::getName).collect(Collectors.toList());
         } catch (DataAccessException e) {
@@ -103,16 +110,22 @@ public class StoragePlanController {
         }
     }
 
-    public void save() {
+    public boolean save() {
+        boolean isNew = false;
+    	for (Consumer<StoragePlan> onSaveListener : onSaveListeners) {
+            onSaveListener.accept(current);
+        }
         try {
             if (current.getId() == null) {
                 store.add(current);
+                isNew = true;
             } else {
                 store.update(current);
             }
         } catch (DataAccessException ignored) {
 
         }
+        return isNew;
     }
 
     public void addOnSaveListener(Consumer<StoragePlan> consumer) {
@@ -124,12 +137,23 @@ public class StoragePlanController {
     }
 
     public void onceOnSaveListener(Consumer<StoragePlan> consumer) {
-        addOnSaveListener(new Consumer<StoragePlan>(){
+        addOnSaveListener(new Consumer<StoragePlan>() {
             @Override
             public void accept(StoragePlan o) {
                 consumer.accept(o);
                 removeOnSaveListener(this);
             }
         });
+    }
+
+    public void delete() {
+        if (current.getId() != null) {
+            try {
+                store.delete(current);
+            } catch (DataAccessException ignored) {
+
+            }
+        }
+        current = null;
     }
 }

@@ -11,4 +11,5 @@ public interface IStoragePlanStore {
     List<StoragePlan> getAll() throws DataAccessException;
     StoragePlan getActive() throws DataAccessException;
     void update(StoragePlan storagePlan) throws DataAccessException;
+    void delete(StoragePlan storagePlan) throws DataAccessException;
 }

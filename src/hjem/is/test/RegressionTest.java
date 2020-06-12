@@ -24,7 +24,7 @@ public class RegressionTest {
         List<List<Double>> data = new ArrayList<>();
         while ((row = csvReader.readLine()) != null) {
             String[] str = row.split(",");
-            data.add(Arrays.stream(str).map(Parse::integer64).collect(Collectors.toList()));
+            data.add(Arrays.stream(str).map(Parse::float64).collect(Collectors.toList()));
         }
         Observation[] observations = new Observation[data.size()];
         for (int i = 0; i < data.size(); i++) {
@@ -41,7 +41,7 @@ public class RegressionTest {
     public void gradientDecentTest() {
         String dependant = "compressivestrength";
         Model model = new ModelFinder(new GradientDescentFit(0.0001), testData, dependant).run();
-        double predicted = model.predict(testData[500]);
+        double predicted = model.predict(testData[30]);
         double real = testData[30].getFeature(dependant);
         System.out.println("gradient descent r^2 = " + model.rSquared);
         System.out.println("gradient descent precision = " + Math.abs(real - predicted));
@@ -52,7 +52,7 @@ public class RegressionTest {
     public void normalEquationTest() {
         String dependant = "compressivestrength";
         Model model = new ModelFinder(new NormalEquationFit(), testData, dependant).run();
-        double predicted = model.predict(testData[500]);
+        double predicted = model.predict(testData[30]);
         double real = testData[30].getFeature(dependant);
         System.out.println("normal equation r^2 = " + model.rSquared);
         System.out.println("normal equation precision = " + Math.abs(real - predicted));

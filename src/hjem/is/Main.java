@@ -1,18 +1,21 @@
 package hjem.is;
 
-import hjem.is.controller.regression.*;
-import hjem.is.ui.StoragePlanListUI;
+import hjem.is.controller.regression.Model;
+import hjem.is.controller.regression.ModelFinder;
+import hjem.is.controller.regression.NormalEquationFit;
+import hjem.is.controller.regression.Observation;
+import hjem.is.db.*;
+import hjem.is.model.Product;
+import hjem.is.model.Supplier;
 import hjem.is.ui.StoragePlanListUITwo;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Main {
     private static void regressionExample() {
@@ -64,15 +67,27 @@ public class Main {
         cell.setCellValue(true);
         try (OutputStream fileOut = new FileOutputStream("workbook.xlsx")) {
             wb.write(fileOut);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-    	//new StoragePlanListUI();
+        try {
+            IProductStore productStore = new ProductSqlStore();
+            ISupplierStore supplierStore = new SupplierSqlStore();
+            if (productStore.getAll().size() == 0) {
+                Supplier supplier = new Supplier(4, 100, "these dudes");
+                supplierStore.add(supplier);
+                List<Product> products = new ArrayList<>();
+                products.add(new Product(30, "isbåd", supplier));
+                products.add(new Product(20, "guldhorn", supplier));
+                products.add(new Product(10, "kong-fu", supplier));
+                productStore.add(products);
+            }
+        } catch (DataAccessException ignored) {
+        }
+        //new StoragePlanListUI();
         new StoragePlanListUITwo();
     }
 }
